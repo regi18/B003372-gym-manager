@@ -1,10 +1,13 @@
 package models;
+import models.membership.Membership;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
 
 public class Course {
+    private static int nextId = 0;
     private final int id;
     private final String name;
     private final int maxCapacity;
@@ -12,24 +15,35 @@ public class Course {
     private LocalDateTime endDate;
     private final ArrayList<Customer> attendees = new ArrayList<>();
 
-    public Course(int id, String name, int maxCapacity, LocalDateTime startDate, LocalDateTime endDate) {
-        this.id = id;
+    public Course(String name, int maxCapacity, LocalDateTime startDate, LocalDateTime endDate) {
+        this.id = nextId++;
         this.name = name;
         this.maxCapacity = maxCapacity;
         this.startDate = startDate;
         this.endDate = endDate;
+
+        if (endDate == startDate || endDate.isBefore(startDate))
+            throw new IllegalArgumentException("endDate should be greater than startDate");
     }
 
-    public void addAttendee(Customer c) {
+    /**
+     * Adds a new customer to this course
+     * @param c The custom to add
+     * @throws RuntimeException when course if full or membership is not valid
+     */
+    public void addAttendee(Customer c) throws RuntimeException {
+        if (this.attendees.size() == maxCapacity)
+            throw new RuntimeException("This course if full, can't book");
+        if (c.getMembership().isExpired())
+            throw new RuntimeException("The membership of the given user is expired");
+        if (!isMembershipValidForThisCourse(c.getMembership()))
+            throw new RuntimeException("The membership of the given user is not valid for this course");
 
+        this.attendees.add(c);
     }
 
-    public void removeAttendee(String fiscalCode) {
-
-    }
-
-    private boolean isMembershipValidForThisCourse() {
-
+    public boolean removeAttendee(String fiscalCode) {
+        return this.attendees.removeIf(a -> a.getFiscalCode().equals(fiscalCode));
     }
 
     @Override
@@ -38,6 +52,12 @@ public class Course {
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
         return id == course.id;
+    }
+
+    // ----- PRIVATE METHODS -----
+
+    private boolean isMembershipValidForThisCourse(Membership m) {
+        return m.isValidForInterval(this.startDate, this.endDate);
     }
 
     // ----- GETTERS -----

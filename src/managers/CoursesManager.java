@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 
 public class CoursesManager {
-    ArrayList<Course> courses = new ArrayList<>();
+    private final ArrayList<Course> courses = new ArrayList<>();
 
     public void addCourse(Course c) throws IllegalArgumentException {
         if (getCourse(c.getId()) != null)
@@ -25,5 +25,9 @@ public class CoursesManager {
             if (c.getId() == id) return c;
         }
         return null;
+    }
+
+    public void printCoursesList() {
+        System.out.println(this.courses);
     }
 }

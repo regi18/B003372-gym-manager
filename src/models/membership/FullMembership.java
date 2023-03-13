@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
  */
 public class FullMembership implements Membership {
     /** Price of the membership */
-    float price;
+    private final float price;
 
     /** Date from which the membership starts */
-    LocalDate validFrom;
+    private final LocalDate validFrom;
 
     /** Date in which the membership ends */
-    LocalDate validUntil;
+    private final LocalDate validUntil;
 
     /**
      * Constructor of a full membership
@@ -26,7 +26,7 @@ public class FullMembership implements Membership {
      *
      * @throws IllegalArgumentException if the price is negative
      */
-    FullMembership(float price, LocalDate validFrom, LocalDate validUntil) {
+    public FullMembership(float price, LocalDate validFrom, LocalDate validUntil) {
         if (price < 0) throw new IllegalArgumentException("Price must be greater than 0 (given: " + price + ")");
 
         this.price = price;

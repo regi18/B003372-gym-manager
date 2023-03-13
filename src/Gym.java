@@ -2,6 +2,7 @@ import managers.CoursesManager;
 import managers.PeopleManager;
 import models.Customer;
 import models.Trainer;
+import services.BookerService;
 
 public class Gym {
     private String name;
@@ -9,18 +10,20 @@ public class Gym {
     private final CoursesManager coursesManager;
     private final PeopleManager<Customer> customersManager;
     private final PeopleManager<Trainer> trainersManager;
+    private final BookerService bookerService;
+
 
     public Gym(String name, String address) {
         this.name = name;
         this.address = address;
         this.coursesManager = new CoursesManager();
-        this.customersManager = new PeopleManager<Customer>();
-        this.trainersManager = new PeopleManager<Trainer>();
+        this.customersManager = new PeopleManager<>();
+        this.trainersManager = new PeopleManager<>();
+        this.bookerService = new BookerService(coursesManager);
     }
 
 
     // ----- GETTERS & SETTERS -----
-
 
     public CoursesManager getCoursesManager() {
         return coursesManager;
@@ -32,6 +35,10 @@ public class Gym {
 
     public PeopleManager<Trainer> getTrainersManager() {
         return trainersManager;
+    }
+
+    public BookerService getBookerService() {
+        return bookerService;
     }
 
     public void setName(String name) {
