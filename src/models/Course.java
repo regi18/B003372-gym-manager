@@ -3,16 +3,15 @@ import models.membership.Membership;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Objects;
 
 
-public class Course {
+public class Course extends Subject {
     private static int nextId = 0;
     private final int id;
     private final String name;
     private final int maxCapacity;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private final LocalDateTime startDate;
+    private final LocalDateTime endDate;
     private final ArrayList<Customer> attendees = new ArrayList<>();
 
     public Course(String name, int maxCapacity, LocalDateTime startDate, LocalDateTime endDate) {
@@ -40,10 +39,16 @@ public class Course {
             throw new RuntimeException("The membership of the given user is not valid for this course");
 
         this.attendees.add(c);
+        this.subscribe(c);
     }
 
     public boolean removeAttendee(String fiscalCode) {
-        return this.attendees.removeIf(a -> a.getFiscalCode().equals(fiscalCode));
+        Customer res = this.attendees.stream().filter(a -> a.getFiscalCode().equals(fiscalCode)).findAny().orElse(null);
+        if (res != null) {
+            this.unsubscribe(res);
+            return true;
+        }
+        else return false;
     }
 
     @Override

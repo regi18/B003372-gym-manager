@@ -25,7 +25,12 @@ public class Main {
         // USE CASE: "Prenota Corso"
         System.out.println("Booking course...");
         Customer c1 = gymTest.getCustomersManager().getPerson("VRDLGI111");
+        Customer c2 = gymTest.getCustomersManager().getPerson("RSSMRA000");
         gymTest.getBookerService().bookCourse(c1, 2);
-        gymTest.getBookerService().bookCourse(c1, 0);
+//        gymTest.getBookerService().bookCourse(c1, 0);
+        gymTest.getBookerService().bookCourse(c2, 0);
+        gymTest.getBookerService().bookCourse(c2, 2);
+
+        gymTest.getCoursesManager().deleteCourse(2);
     }
 }

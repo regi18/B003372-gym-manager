@@ -1,5 +1,6 @@
 package managers;
 
+import events.CourseDeletedEvent;
 import models.Course;
 import java.util.ArrayList;
 
@@ -17,7 +18,13 @@ public class CoursesManager {
     public boolean deleteCourse(int id) {
         Course toRemove = getCourse(id);
         if (toRemove == null) return false;
-        else return this.courses.remove(toRemove);
+
+        boolean res = this.courses.remove(toRemove);
+        if (res) {
+            System.out.println("[CourseManager] Course '" + toRemove.getName() + "' canceled");
+            toRemove.notifyAll(new CourseDeletedEvent(toRemove));
+        }
+        return res;
     }
 
     public Course getCourse(int id) {
@@ -25,9 +32,5 @@ public class CoursesManager {
             if (c.getId() == id) return c;
         }
         return null;
-    }
-
-    public void printCoursesList() {
-        System.out.println(this.courses);
     }
 }
