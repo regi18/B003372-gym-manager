@@ -38,12 +38,12 @@ class BookerServiceTest {
     }
 
     @Test
-    public void when_BookingExistingCourse_Expect_Success() {
+    public void When_BookingExistingCourse_Expect_Success() {
         b.bookCourse(testCustomer, testCourse1.getId());
     }
 
     @Test
-    public void when_BookingNonExistingCourse_Expect_RuntimeException() {
+    public void When_BookingNonExistingCourse_Expect_RuntimeException() {
         Assertions.assertThrows(
             RuntimeException.class,
             () -> b.bookCourse(testCustomer, testCourse1.getId() + 10),
@@ -52,7 +52,7 @@ class BookerServiceTest {
     }
 
     @Test
-    public void when_deletingNonExistingCourseBooking_Expect_toReturnFalse() {
+    public void When_DeletingNonExistingCourseBooking_Expect_ToReturnFalse() {
         // Test for non-existing courseId
         Assertions.assertFalse(b.deleteCourseBooking(testCustomer, -1));
         // Test for existing courseId, but user has not booked that course
@@ -60,7 +60,7 @@ class BookerServiceTest {
     }
 
     @Test
-    public void when_deletingExistingCourseBooking_Expect_toReturnTrue() {
+    public void When_DeletingExistingCourseBooking_Expect_ToReturnTrue() {
         b.bookCourse(testCustomer, testCourse1.getId());
         b.bookCourse(testCustomer, testCourse2.getId());
         Assertions.assertTrue(b.deleteCourseBooking(testCustomer, testCourse1.getId()));

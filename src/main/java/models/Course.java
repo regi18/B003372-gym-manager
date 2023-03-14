@@ -21,7 +21,7 @@ public class Course extends Subject {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        if (endDate == startDate || endDate.isBefore(startDate))
+        if (endDate.equals(startDate) || endDate.isBefore(startDate))
             throw new IllegalArgumentException("endDate should be greater than startDate");
     }
 
