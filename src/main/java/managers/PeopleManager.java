@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 
 public class PeopleManager<T extends Person> {
-    private final ArrayList<T> people = new ArrayList<T>();
+    private final ArrayList<T> people = new ArrayList<>();
 
     /**
      * Add a new person
