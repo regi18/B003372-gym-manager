@@ -13,13 +13,15 @@ public class Course extends Subject {
     private final LocalDateTime startDate;
     private final LocalDateTime endDate;
     private final ArrayList<Customer> attendees = new ArrayList<>();
+    private final Trainer trainer;
 
-    public Course(String name, int maxCapacity, LocalDateTime startDate, LocalDateTime endDate) {
+    public Course(String name, int maxCapacity, LocalDateTime startDate, LocalDateTime endDate, Trainer trainer) {
         this.id = nextId++;
         this.name = name;
         this.maxCapacity = maxCapacity;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.trainer = trainer;
 
         if (endDate.equals(startDate) || endDate.isBefore(startDate))
             throw new IllegalArgumentException("endDate should be greater than startDate");
@@ -85,5 +87,9 @@ public class Course extends Subject {
 
     public LocalDateTime getEndDate() {
         return endDate;
+    }
+
+    public Trainer getTrainer() {
+        return trainer;
     }
 }

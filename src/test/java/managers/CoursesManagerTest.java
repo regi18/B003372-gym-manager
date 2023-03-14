@@ -1,9 +1,12 @@
 package managers;
 
 import models.Course;
+import models.Trainer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
 import java.time.LocalDateTime;
 
 
@@ -15,7 +18,7 @@ class CoursesManagerTest {
     @BeforeEach
     public void when_AddingNewCourse_Expect_Success() {
         m = new CoursesManager();
-        testCourse = new Course("test", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1));
+        testCourse = new Course("test", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
         m.addCourse(testCourse);
     }
 
@@ -30,7 +33,7 @@ class CoursesManagerTest {
 
     @Test
     public void when_gettingExistingCourse_Expect_toReturnThatCourse() {
-        Course c1 = new Course("test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1));
+        Course c1 = new Course("test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
         m.addCourse(c1);
         Assertions.assertEquals(testCourse, m.getCourse(testCourse.getId()));
     }

@@ -3,6 +3,7 @@ package services;
 import managers.CoursesManager;
 import models.Course;
 import models.Customer;
+import models.Trainer;
 import models.membership.FullMembership;
 import models.membership.Membership;
 import org.junit.jupiter.api.Assertions;
@@ -26,8 +27,8 @@ class BookerServiceTest {
     private void init() {
         CoursesManager m = new CoursesManager();
         b = new BookerService(m);
-        testCourse1 = new Course("test1", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1));
-        testCourse2 = new Course("test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1));
+        testCourse1 = new Course("test1", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
+        testCourse2 = new Course("test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
         m.addCourse(testCourse1);
         m.addCourse(testCourse2);
 

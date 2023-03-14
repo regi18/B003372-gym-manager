@@ -1,5 +1,6 @@
 import models.Course;
 import models.Customer;
+import models.Trainer;
 import models.membership.FullMembership;
 import models.membership.Membership;
 import models.membership.WeekendMembershipDecorator;
@@ -11,10 +12,11 @@ public class Main {
     public static void main(String[] args) {
 
         Gym gymTest = new Gym("testGym", "via Roma 47, Firenze");
+        Trainer tmp = new Trainer("A", "B", "C", 10);
 
-        gymTest.getCoursesManager().addCourse(new Course("Spinning", 10, LocalDateTime.parse("2023-03-20T13:00:00"), LocalDateTime.parse("2023-03-20T14:00:00")));
-        gymTest.getCoursesManager().addCourse(new Course("Calisthenics", 10, LocalDateTime.parse("2023-03-15T20:00:00"), LocalDateTime.parse("2023-03-15T21:30:00")));
-        gymTest.getCoursesManager().addCourse(new Course("Yoga", 10, LocalDateTime.parse("2023-03-18T09:00:00"), LocalDateTime.parse("2023-03-18T10:00:00")));
+        gymTest.getCoursesManager().addCourse(new Course("Spinning", 10, LocalDateTime.parse("2023-03-20T13:00:00"), LocalDateTime.parse("2023-03-20T14:00:00"), tmp));
+        gymTest.getCoursesManager().addCourse(new Course("Calisthenics", 10, LocalDateTime.parse("2023-03-15T20:00:00"), LocalDateTime.parse("2023-03-15T21:30:00"), tmp));
+        gymTest.getCoursesManager().addCourse(new Course("Yoga", 10, LocalDateTime.parse("2023-03-18T09:00:00"), LocalDateTime.parse("2023-03-18T10:00:00"), tmp));
 
         Membership fullMembership = new FullMembership(300, LocalDate.now(), LocalDate.now().plusYears(1));
         Membership weekendMembership = new WeekendMembershipDecorator(new FullMembership(300, LocalDate.now(), LocalDate.now().plusYears(1)));
