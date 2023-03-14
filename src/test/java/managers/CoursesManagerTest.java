@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
-import org.mockito.Mockito;
 
 
 class CoursesManagerTest {
@@ -42,7 +41,7 @@ class CoursesManagerTest {
     }
 
     @Test
-    public void when_deletingExistingCourse_Expect_toReturnTrueAndNotifySubscribers() {
+    public void when_deletingExistingCourse_Expect_toReturnTrue() {
         Assertions.assertTrue(m.deleteCourse(testCourse.getId()));
     }
 
