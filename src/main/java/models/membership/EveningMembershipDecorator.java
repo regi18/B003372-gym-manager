@@ -17,6 +17,6 @@ public class EveningMembershipDecorator extends MembershipDecorator {
     }
 
     private boolean isOnEvening(LocalDateTime date) {
-        return date.getHour() > 20;
+        return date.getHour() >= 20;
     }
 }

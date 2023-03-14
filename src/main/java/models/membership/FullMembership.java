@@ -22,12 +22,13 @@ public class FullMembership implements Membership {
      *
      * @param price      Price of the membership
      * @param validFrom  LocalDate from which the membership starts
-     * @param validUntil LocalDate in which the membership ends
+     * @param validUntil LocalDate in which the membership ends (can be the same date as validFrom, for a single day membership)
      *
-     * @throws IllegalArgumentException if the price is negative
+     * @throws IllegalArgumentException if the price is negative or the date range is invalid
      */
     public FullMembership(float price, LocalDate validFrom, LocalDate validUntil) {
         if (price < 0) throw new IllegalArgumentException("Price must be greater than 0 (given: " + price + ")");
+        if (!validFrom.isBefore(validUntil) && !validFrom.equals(validUntil)) throw new IllegalArgumentException("Date range invalid: validFrom must be a date before or equal to validUntil");
 
         this.price = price;
         this.validFrom = validFrom;
@@ -56,6 +57,8 @@ public class FullMembership implements Membership {
 
     @Override
     public boolean isValidForInterval(LocalDateTime start, LocalDateTime end) {
-        return validFrom.isBefore(start.toLocalDate()) && validFrom.isBefore(end.toLocalDate()) && validUntil.isAfter(end.toLocalDate()) && validUntil.isAfter(start.toLocalDate());
+        if (end.isBefore(start)) return false;
+        else return (validFrom.isBefore(start.toLocalDate()) || validFrom.equals(start.toLocalDate()))
+                    && (validUntil.isAfter(end.toLocalDate()) || validUntil.equals(end.toLocalDate()));
     }
 }
