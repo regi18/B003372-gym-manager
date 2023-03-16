@@ -24,7 +24,7 @@ class BookerServiceTest {
     private Customer testCustomer;
 
     @BeforeEach
-    private void init() {
+    public void init() {
         CoursesManager m = new CoursesManager();
         b = new BookerService(m);
         testCourse1 = new Course("test1", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
