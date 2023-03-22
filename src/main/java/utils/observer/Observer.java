@@ -1,6 +1,6 @@
-package models;
+package utils.observer;
 
-import events.Event;
+import utils.observer.events.Event;
 
 
 public interface Observer {

@@ -1,8 +1,12 @@
 package models;
 import models.membership.Membership;
+import utils.observer.Subject;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Collections.unmodifiableList;
 
 
 public class Course extends Subject {
@@ -41,16 +45,22 @@ public class Course extends Subject {
             throw new RuntimeException("The membership of the given user is not valid for this course");
 
         this.attendees.add(c);
-        this.subscribe(c);
     }
 
+    /**
+     * Removes an attendee
+     * @param fiscalCode The fiscal code of the attendee to remove
+     * @return true if removed, false otherwise
+     */
     public boolean removeAttendee(String fiscalCode) {
-        Customer res = this.attendees.stream().filter(a -> a.getFiscalCode().equals(fiscalCode)).findAny().orElse(null);
-        if (res != null) {
-            this.unsubscribe(res);
-            return true;
-        }
-        else return false;
+        return this.attendees.removeIf(a -> a.getFiscalCode().equals(fiscalCode));
+    }
+
+    /**
+     * Returns a read-only list of attendees
+     */
+    public List<Customer> getAttendees() {
+        return unmodifiableList(this.attendees);
     }
 
     @Override

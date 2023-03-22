@@ -1,6 +1,7 @@
-package services;
+package controllers;
 
-import managers.CoursesManager;
+import controllers.BookerService;
+import controllers.CoursesController;
 import models.Course;
 import models.Customer;
 import models.Trainer;
@@ -11,7 +12,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -22,6 +26,7 @@ class BookerServiceTest {
     private Course testCourse1;
     private Course testCourse2;
     private Customer testCustomer;
+    private Membership mockedMembership;
 
     @BeforeEach
     public void init() {
@@ -32,7 +37,7 @@ class BookerServiceTest {
         m.addCourse(testCourse1);
         m.addCourse(testCourse2);
 
-        Membership mockedMembership = Mockito.mock(FullMembership.class);
+        mockedMembership = Mockito.mock(FullMembership.class);
         when(mockedMembership.isValidForInterval(any(), any())).thenReturn(true);
         when(mockedMembership.isExpired()).thenReturn(false);
         testCustomer = new Customer("A", "A", "A", mockedMembership);
@@ -65,5 +70,15 @@ class BookerServiceTest {
         b.bookCourse(testCustomer, testCourse1.getId());
         b.bookCourse(testCustomer, testCourse2.getId());
         Assertions.assertTrue(b.deleteCourseBooking(testCustomer, testCourse1.getId()));
+    }
+
+    @Test
+    public void When_GettingBookedCourseForCustomer_Expect_ToReturnTheCourses() {
+        b.bookCourse(testCustomer, testCourse1.getId());
+        b.bookCourse(testCustomer, testCourse2.getId());
+        b.bookCourse(new Customer("B", "A", "A", mockedMembership), testCourse1.getId());
+
+        List<Course> l = b.getBookingsForCustomer(testCustomer.getFiscalCode());
+        Assertions.assertEquals(l, Arrays.asList(testCourse1, testCourse2));
     }
 }

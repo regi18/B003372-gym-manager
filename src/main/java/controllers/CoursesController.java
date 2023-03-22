@@ -1,11 +1,14 @@
-package managers;
+package controllers;
 
-import events.CourseDeletedEvent;
+import utils.observer.events.CourseDeletedEvent;
 import models.Course;
 import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Collections.unmodifiableList;
 
 
-public class CoursesManager {
+public class CoursesController {
     private final ArrayList<Course> courses = new ArrayList<>();
 
     /**
@@ -25,15 +28,12 @@ public class CoursesManager {
      * @param id The id of the course to delete
      * @return true if successful, false otherwise
      */
-    public boolean deleteCourse(int id) {
+    public boolean removeCourse(int id) {
         Course toRemove = getCourse(id);
         if (toRemove == null) return false;
 
         boolean res = this.courses.remove(toRemove);
-        if (res) {
-            System.out.println("[CourseManager] Course '" + toRemove.getName() + "' canceled");
-            toRemove.notifyAll(new CourseDeletedEvent(toRemove));
-        }
+        if (res) toRemove.notifyAll(new CourseDeletedEvent(toRemove));
         return res;
     }
 
@@ -47,5 +47,13 @@ public class CoursesManager {
             if (c.getId() == id) return c;
         }
         return null;
+    }
+
+    /**
+     * Returns a read-only list of courses
+     * @return The list of courses
+     */
+    public List<Course> getAll() {
+        return unmodifiableList(this.courses);
     }
 }

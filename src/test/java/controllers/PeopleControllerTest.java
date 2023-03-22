@@ -1,4 +1,4 @@
-package managers;
+package controllers;
 
 import models.Person;
 import org.junit.jupiter.api.Assertions;
@@ -8,14 +8,14 @@ import org.mockito.Answers;
 import org.mockito.Mockito;
 
 
-class PeopleManagerTest {
-    private PeopleManager<Person> m;
+class PeopleControllerTest {
+    private PeopleController<Person> m;
     private Person testPerson;
 
     @Test
     @BeforeEach
     public void when_AddingNewPerson_Expect_Success() {
-        m = new PeopleManager<>();
+        m = new PeopleController<>();
         testPerson = Mockito.mock(Person.class, Mockito.withSettings().useConstructor("RSSMRA", "Mario", "Rossi").defaultAnswer(Mockito.CALLS_REAL_METHODS));
         m.addPerson(testPerson);
     }

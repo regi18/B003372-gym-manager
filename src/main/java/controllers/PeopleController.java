@@ -1,10 +1,14 @@
-package managers;
+package controllers;
 
+import models.Course;
 import models.Person;
 import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Collections.unmodifiableList;
 
 
-public class PeopleManager<T extends Person> {
+public class PeopleController<T extends Person> {
     private final ArrayList<T> people = new ArrayList<>();
 
     /**
@@ -35,5 +39,13 @@ public class PeopleManager<T extends Person> {
             if (p.getFiscalCode().equals(fiscalCode)) return p;
         }
         return null;
+    }
+
+    /**
+     * Returns a read-only list of people
+     * @return The list of people
+     */
+    public List<T> getAll() {
+        return unmodifiableList(this.people);
     }
 }

@@ -1,4 +1,4 @@
-package managers;
+package controllers;
 
 import models.Course;
 import models.Trainer;
@@ -10,14 +10,14 @@ import org.mockito.Mockito;
 import java.time.LocalDateTime;
 
 
-class CoursesManagerTest {
-    private CoursesManager m;
+class CoursesControllerTest {
+    private CoursesController m;
     private Course testCourse;
 
     @Test
     @BeforeEach
     public void when_AddingNewCourse_Expect_Success() {
-        m = new CoursesManager();
+        m = new CoursesController();
         testCourse = new Course("test", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
         m.addCourse(testCourse);
     }
@@ -45,11 +45,11 @@ class CoursesManagerTest {
 
     @Test
     public void when_deletingExistingCourse_Expect_toReturnTrue() {
-        Assertions.assertTrue(m.deleteCourse(testCourse.getId()));
+        Assertions.assertTrue(m.removeCourse(testCourse.getId()));
     }
 
     @Test
     public void when_deletingNonExistingCourse_Expect_toReturnFalse() {
-        Assertions.assertFalse(m.deleteCourse(testCourse.getId() + 1));
+        Assertions.assertFalse(m.removeCourse(testCourse.getId() + 1));
     }
 }

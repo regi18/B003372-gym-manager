@@ -33,6 +33,6 @@ public class Main {
         gymTest.getBookerService().bookCourse(c2, 0);
         gymTest.getBookerService().bookCourse(c2, 2);
 
-        gymTest.getCoursesManager().deleteCourse(2);
+        gymTest.getCoursesManager().removeCourse(2);
     }
 }
