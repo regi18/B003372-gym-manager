@@ -26,6 +26,9 @@ public class Main {
         PeopleController<Customer> customersController = new PeopleController<>();
         PeopleController<Trainer> trainersController = new PeopleController<>();
 
+        // Add sample trainers
+        trainersController.addPerson(trainer1);
+
         // Add sample customers
         customersController.addPerson(new Customer("RSSMRA000", "Mario", "Rossi", yearlyFullMembership));
         customersController.addPerson(new Customer("VRDLGI111", "Luigi", "Verdi", yearlyWeekendMembership));
