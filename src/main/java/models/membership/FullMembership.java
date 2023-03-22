@@ -61,4 +61,13 @@ public class FullMembership implements Membership {
         else return (validFrom.isBefore(start.toLocalDate()) || validFrom.equals(start.toLocalDate()))
                     && (validUntil.isAfter(end.toLocalDate()) || validUntil.equals(end.toLocalDate()));
     }
+
+    @Override
+    public String toString() {
+        return "FullMembership{" +
+                "price=" + price +
+                ", validFrom=" + validFrom +
+                ", validUntil=" + validUntil +
+                '}';
+    }
 }

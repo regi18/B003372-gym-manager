@@ -19,4 +19,9 @@ public class EveningMembershipDecorator extends MembershipDecorator {
     private boolean isOnEvening(LocalDateTime date) {
         return date.getHour() >= 20;
     }
+
+    @Override
+    public String toString() {
+        return "EveningMembershipDecorator{" + membership.toString() + "}";
+    }
 }

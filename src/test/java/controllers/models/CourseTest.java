@@ -1,5 +1,8 @@
-package models;
+package controllers.models;
 
+import models.Course;
+import models.Customer;
+import models.Trainer;
 import models.membership.EveningMembershipDecorator;
 import models.membership.FullMembership;
 import models.membership.Membership;

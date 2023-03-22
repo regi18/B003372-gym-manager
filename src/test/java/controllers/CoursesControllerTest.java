@@ -32,24 +32,24 @@ class CoursesControllerTest {
     }
 
     @Test
-    public void when_gettingExistingCourse_Expect_toReturnThatCourse() {
+    public void when_GettingExistingCourse_Expect_ToReturnThatCourse() {
         Course c1 = new Course("test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
         m.addCourse(c1);
         Assertions.assertEquals(testCourse, m.getCourse(testCourse.getId()));
     }
 
     @Test
-    public void when_gettingNonExistingCourse_Expect_toReturnNull() {
+    public void when_GettingNonExistingCourse_Expect_ToReturnNull() {
         Assertions.assertNull(m.getCourse(testCourse.getId() + 1));
     }
 
     @Test
-    public void when_deletingExistingCourse_Expect_toReturnTrue() {
+    public void when_DeletingExistingCourse_Expect_ToReturnTrue() {
         Assertions.assertTrue(m.removeCourse(testCourse.getId()));
     }
 
     @Test
-    public void when_deletingNonExistingCourse_Expect_toReturnFalse() {
+    public void when_DeletingNonExistingCourse_Expect_ToReturnFalse() {
         Assertions.assertFalse(m.removeCourse(testCourse.getId() + 1));
     }
 }

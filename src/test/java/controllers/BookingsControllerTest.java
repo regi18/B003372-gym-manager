@@ -1,7 +1,5 @@
 package controllers;
 
-import controllers.BookerService;
-import controllers.CoursesController;
 import models.Course;
 import models.Customer;
 import models.Trainer;
@@ -12,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -21,8 +18,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
-class BookerServiceTest {
-    private BookerService b;
+class BookingsControllerTest {
+    private BookingsController b;
     private Course testCourse1;
     private Course testCourse2;
     private Customer testCustomer;
@@ -30,8 +27,8 @@ class BookerServiceTest {
 
     @BeforeEach
     public void init() {
-        CoursesManager m = new CoursesManager();
-        b = new BookerService(m);
+        CoursesController m = new CoursesController();
+        b = new BookingsController(m);
         testCourse1 = new Course("test1", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
         testCourse2 = new Course("test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
         m.addCourse(testCourse1);

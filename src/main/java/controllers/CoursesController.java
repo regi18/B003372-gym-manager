@@ -1,6 +1,5 @@
 package controllers;
 
-import utils.observer.events.CourseDeletedEvent;
 import models.Course;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +31,7 @@ public class CoursesController {
         Course toRemove = getCourse(id);
         if (toRemove == null) return false;
 
-        boolean res = this.courses.remove(toRemove);
-        if (res) toRemove.notifyAll(new CourseDeletedEvent(toRemove));
-        return res;
+        return this.courses.remove(toRemove);
     }
 
     /**

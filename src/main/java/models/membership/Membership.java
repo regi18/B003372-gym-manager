@@ -45,4 +45,10 @@ public interface Membership {
      * @return boolean - true if the membership is valid for the current interval, false otherwise
      */
     boolean isValidForInterval(LocalDateTime start, LocalDateTime end);
+
+    /**
+     * Get a string representation of the membership
+     * @return String - string representation of the membership
+     */
+    String toString();
 }

@@ -1,5 +1,8 @@
-package models.membership;
+package controllers.models.membership;
 
+import models.membership.EveningMembershipDecorator;
+import models.membership.FullMembership;
+import models.membership.Membership;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;

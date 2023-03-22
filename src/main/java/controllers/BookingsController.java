@@ -7,10 +7,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public class BookerService {
+public class BookingsController {
     private final CoursesController coursesController;
 
-    public BookerService(CoursesController coursesController) {
+    public BookingsController(CoursesController coursesController) {
         this.coursesController = coursesController;
     }
 

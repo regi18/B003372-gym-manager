@@ -1,6 +1,5 @@
 package models;
 import models.membership.Membership;
-import utils.observer.Subject;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ import java.util.List;
 import static java.util.Collections.unmodifiableList;
 
 
-public class Course extends Subject {
+public class Course {
     private static int nextId = 0;
     private final int id;
     private final String name;

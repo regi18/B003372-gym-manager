@@ -1,5 +1,8 @@
-package models.membership;
+package controllers.models.membership;
 
+import models.membership.FullMembership;
+import models.membership.Membership;
+import models.membership.WeekendMembershipDecorator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
