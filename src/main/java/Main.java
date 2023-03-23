@@ -34,27 +34,12 @@ public class Main {
         customersController.addPerson(new Customer("VRDLGI111", "Luigi", "Verdi", yearlyWeekendMembership));
 
         // Add sample courses
-        coursesController.addCourse(new Course("Spinning", 10, LocalDateTime.parse("2023-03-20T13:00:00"), LocalDateTime.parse("2023-03-20T14:00:00"), trainer1));
-        coursesController.addCourse(new Course("Calisthenics", 10, LocalDateTime.parse("2023-03-15T20:00:00"), LocalDateTime.parse("2023-03-15T21:30:00"), trainer1));
-        coursesController.addCourse(new Course("Yoga", 10, LocalDateTime.parse("2023-03-18T09:00:00"), LocalDateTime.parse("2023-03-18T10:00:00"), trainer1));
+        coursesController.addCourse(new Course("Spinning", 10, LocalDateTime.now().plusHours(1), LocalDateTime.now().plusHours(3), trainer1));
+        coursesController.addCourse(new Course("Calisthenics", 10, LocalDateTime.now().plusHours(1), LocalDateTime.now().plusHours(3), trainer1));
+        coursesController.addCourse(new Course("Yoga", 10, LocalDateTime.now().plusHours(1), LocalDateTime.now().plusHours(3), trainer1));
 
 
-
-        CustomerView customerView = new CustomerView(customersController, bookingsController);
-        customerView.login("VRDLGI111");
-        customerView.prompt();
-//
-//
-//
-//        // USE CASE: "Prenota Corso"
-//        System.out.println("Booking course...");
-//        Customer c1 = gymTest.getCustomersManager().getPerson("VRDLGI111");
-//        Customer c2 = gymTest.getCustomersManager().getPerson("RSSMRA000");
-//        gymTest.getBookerService().bookCourse(c1, 2);
-////        gymTest.getBookerService().bookCourse(c1, 0);
-//        gymTest.getBookerService().bookCourse(c2, 0);
-//        gymTest.getBookerService().bookCourse(c2, 2);
-//
-//        gymTest.getCoursesController().removeCourse(2);
+        CustomerView customerView = new CustomerView(customersController, bookingsController, coursesController);
+        customerView.open();
     }
 }

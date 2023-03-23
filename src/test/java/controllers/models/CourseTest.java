@@ -79,6 +79,25 @@ class CourseTest {
     }
 
     @Test
+    public void When_AddingNewAttendeeButAlreadyAdded_Expected_RuntimeException() {
+        LocalDateTime start = LocalDate.now().atTime(10, 0);
+        Membership mockedMembership = Mockito.mock(FullMembership.class);
+        when(mockedMembership.isValidForInterval(any(), any())).thenReturn(true);
+        when(mockedMembership.isExpired()).thenReturn(false);
+        Course c = new Course("Test", 2, start, start.plusHours(1), Mockito.mock(Trainer.class));
+
+        Assertions.assertThrows(
+            RuntimeException.class,
+            () -> {
+                c.addAttendee(new Customer("A", "A", "A", mockedMembership));
+                c.addAttendee(new Customer("B", "A", "A", mockedMembership));
+                c.addAttendee(new Customer("A", "A", "A", mockedMembership));
+            },
+            "Expected addAttendee() to throw, but it didn't"
+        );
+    }
+
+    @Test
     public void When_RemovingExistingAttendee_Expect_ToReturnTrue() {
         Course c = new Course("Test", 2, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
         c.addAttendee(new Customer("A", "B", "C", new FullMembership(1, LocalDate.now(), LocalDate.now())));

@@ -38,6 +38,8 @@ public class Course {
     public void addAttendee(Customer c) throws RuntimeException {
         if (this.attendees.size() == maxCapacity)
             throw new RuntimeException("This course if full, can't book");
+        if (this.attendees.contains(c))
+            throw new RuntimeException("The given customer is already booked for this course");
         if (c.getMembership().isExpired())
             throw new RuntimeException("The membership of the given user is expired");
         if (!isMembershipValidForThisCourse(c.getMembership()))
