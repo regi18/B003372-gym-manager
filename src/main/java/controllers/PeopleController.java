@@ -8,14 +8,14 @@ import java.util.List;
 import static java.util.Collections.unmodifiableList;
 
 
-public class PeopleController<T extends Person> {
+public abstract class PeopleController<T extends Person> {
     private final ArrayList<T> people = new ArrayList<>();
 
     /**
      * Add a new person
      * @param newPerson The new person
      */
-    public void addPerson(T newPerson) throws IllegalArgumentException {
+    protected void addPerson(T newPerson) throws IllegalArgumentException {
         if (getPerson(newPerson.getFiscalCode()) != null)
             throw new IllegalArgumentException("Someone with this fiscalCode exists already");
 

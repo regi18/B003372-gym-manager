@@ -6,32 +6,32 @@ import java.time.LocalDateTime;
 /**
  * Decorator that lets the membership be valid in weekdays
  */
-public class WeekendMembershipDecorator extends MembershipDecorator {
+public class WeekdaysMembershipDecorator extends MembershipDecorator {
     int uses;
 
-    public WeekendMembershipDecorator(Membership membership) {
+    public WeekdaysMembershipDecorator(Membership membership) {
         super(membership);
     }
 
     @Override
     public boolean isValidForInterval(LocalDateTime start, LocalDateTime end) {
         if (!this.isDateIntervalValid(start, end)) return false;
-        boolean isCurrTrue = (isOnWeekend(start) && isOnWeekend(end));
+        boolean isCurrTrue = (isOnWeekdays(start) && isOnWeekdays(end));
         if (isCurrTrue) uses++;
         return super.isValidForInterval(start, end) || isCurrTrue;
     }
 
     @Override
     public float getPrice() {
-        return super.getPrice() + 50;
+        return super.getPrice() + 250;
     }
 
     @Override
     public String getUses() {
-        return super.getUses() + "Weekend uses: " + uses + ", ";
+        return super.getUses() + "Weekdays uses: " + uses + ", ";
     }
 
-    private boolean isOnWeekend(LocalDateTime date) {
-        return date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
+    private boolean isOnWeekdays(LocalDateTime date) {
+        return date.getDayOfWeek() != DayOfWeek.SATURDAY && date.getDayOfWeek() != DayOfWeek.SUNDAY;
     }
 }

@@ -1,11 +1,16 @@
 package models.membership;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-/** Abstract membership decorator */
+/**
+ * Abstract membership decorator
+ */
 public abstract class MembershipDecorator implements Membership {
 
-    /** Membership to decorate */
+    /**
+     * Membership to decorate
+     */
     protected final Membership membership;
 
     /**
@@ -35,5 +40,28 @@ public abstract class MembershipDecorator implements Membership {
     @Override
     public boolean isExpired() {
         return this.membership.isExpired();
+    }
+
+    @Override
+    public boolean isValidForInterval(LocalDateTime start, LocalDateTime end) {
+        return this.membership.isValidForInterval(start, end);
+    }
+
+    @Override
+    public String getUses() {
+        return this.membership.getUses();
+    }
+
+    /**
+     * Checks if the membership is valid in the given interval
+     *
+     * @param start Start of the interval
+     * @param end End of the interval
+     * @return True if the membership is valid in the given interval, false otherwise
+     */
+    protected boolean isDateIntervalValid(LocalDateTime start, LocalDateTime end) {
+        if (end.isBefore(start)) return false;
+        else return (this.membership.getValidFrom().isBefore(start.toLocalDate()) || this.membership.getValidFrom().equals(start.toLocalDate()))
+                && (this.membership.getValidUntil().isAfter(end.toLocalDate()) || this.membership.getValidUntil().equals(end.toLocalDate()));
     }
 }

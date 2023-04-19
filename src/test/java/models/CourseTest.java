@@ -1,16 +1,17 @@
-package controllers.models;
+package models;
 
-import models.Course;
-import models.Customer;
-import models.Trainer;
-import models.membership.EveningMembershipDecorator;
-import models.membership.FullMembership;
+import models.membership.EmptyMembership;
+import models.membership.WeekdaysMembershipDecorator;
 import models.membership.Membership;
+import models.membership.WeekendMembershipDecorator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +38,7 @@ class CourseTest {
     public void When_AddingNewAttendeeButCourseFull_Expected_RuntimeException() {
         Course c = new Course("Test", 2, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
 
-        Membership mockedMembership = Mockito.mock(FullMembership.class);
+        Membership mockedMembership = Mockito.mock(EmptyMembership.class);
         when(mockedMembership.isValidForInterval(any(), any())).thenReturn(true);
         when(mockedMembership.isExpired()).thenReturn(false);
 
@@ -52,10 +53,13 @@ class CourseTest {
 
     @Test
     public void When_AddingNewAttendeeButMembershipInvalid_Expected_RuntimeException() {
-        LocalDateTime start = LocalDate.now().atTime(10, 0);
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        LocalDateTime start = cal.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
         Course c = new Course("Test", 2, start, start.plusHours(1), Mockito.mock(Trainer.class));
 
-        Membership m = new EveningMembershipDecorator(new FullMembership(1, LocalDate.now(), LocalDate.now()));
+        Membership m = new WeekdaysMembershipDecorator(new EmptyMembership(LocalDate.now(), LocalDate.now()));
 
         Assertions.assertThrows(
             RuntimeException.class,
@@ -69,7 +73,7 @@ class CourseTest {
         LocalDateTime start = LocalDate.now().atTime(10, 0);
         Course c = new Course("Test", 2, start, start.plusHours(1), Mockito.mock(Trainer.class));
 
-        Membership m = new EveningMembershipDecorator(new FullMembership(1, LocalDate.now().plusDays(10), LocalDate.now().plusDays(20)));
+        Membership m = new WeekdaysMembershipDecorator(new EmptyMembership(LocalDate.now().plusDays(10), LocalDate.now().plusDays(20)));
 
         Assertions.assertThrows(
             RuntimeException.class,
@@ -81,7 +85,7 @@ class CourseTest {
     @Test
     public void When_AddingNewAttendeeButAlreadyAdded_Expected_RuntimeException() {
         LocalDateTime start = LocalDate.now().atTime(10, 0);
-        Membership mockedMembership = Mockito.mock(FullMembership.class);
+        Membership mockedMembership = Mockito.mock(EmptyMembership.class);
         when(mockedMembership.isValidForInterval(any(), any())).thenReturn(true);
         when(mockedMembership.isExpired()).thenReturn(false);
         Course c = new Course("Test", 2, start, start.plusHours(1), Mockito.mock(Trainer.class));
@@ -100,14 +104,16 @@ class CourseTest {
     @Test
     public void When_RemovingExistingAttendee_Expect_ToReturnTrue() {
         Course c = new Course("Test", 2, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
-        c.addAttendee(new Customer("A", "B", "C", new FullMembership(1, LocalDate.now(), LocalDate.now())));
+        Membership m = new WeekendMembershipDecorator(new WeekdaysMembershipDecorator(new EmptyMembership(LocalDate.now(), LocalDate.now())));
+        c.addAttendee(new Customer("A", "B", "C", m));
         Assertions.assertTrue(c.removeAttendee("A"));
     }
 
     @Test
     public void When_RemovingNonExistingAttendee_Expect_ToReturnFalse() {
         Course c = new Course("Test", 2, LocalDateTime.now(), LocalDateTime.now().plusHours(1), Mockito.mock(Trainer.class));
-        c.addAttendee(new Customer("A", "B", "C", new FullMembership(1, LocalDate.now(), LocalDate.now())));
+        Membership m = new WeekendMembershipDecorator(new WeekdaysMembershipDecorator(new EmptyMembership(LocalDate.now(), LocalDate.now())));
+        c.addAttendee(new Customer("A", "B", "C", m));
         Assertions.assertFalse(c.removeAttendee("B"));
     }
 }

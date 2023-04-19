@@ -1,12 +1,7 @@
-package controllers.models.membership;
+package models.membership;
 
-import models.membership.FullMembership;
-import models.membership.Membership;
-import models.membership.WeekendMembershipDecorator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -16,7 +11,7 @@ import java.util.Calendar;
 class WeekendMembershipDecoratorTest {
     @Test
     public void when_checkingIsValidForInterval_With_goodInterval_Expect_toReturnTrue() {
-        Membership m = new WeekendMembershipDecorator(new FullMembership(1, LocalDate.now(), LocalDate.now().plusYears(1)));
+        Membership m = new WeekendMembershipDecorator(new EmptyMembership(LocalDate.now(), LocalDate.now().plusYears(1)));
 
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
@@ -27,7 +22,7 @@ class WeekendMembershipDecoratorTest {
 
     @Test
     public void when_checkingIsValidForInterval_With_badInterval_Expect_toReturnFalse() {
-        Membership m = new WeekendMembershipDecorator(new FullMembership(1, LocalDate.now(), LocalDate.now().plusYears(1)));
+        Membership m = new WeekendMembershipDecorator(new EmptyMembership(LocalDate.now(), LocalDate.now().plusYears(1)));
 
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);

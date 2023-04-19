@@ -47,8 +47,8 @@ public interface Membership {
     boolean isValidForInterval(LocalDateTime start, LocalDateTime end);
 
     /**
-     * Get a string representation of the membership
-     * @return String - string representation of the membership
+     * Get how many times the various membership decorators have been useful to grant access
+     * @return The string with the details
      */
-    String toString();
+    String getUses();
 }
