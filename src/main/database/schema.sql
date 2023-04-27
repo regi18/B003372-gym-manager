@@ -41,11 +41,11 @@ CREATE TABLE memberships
     FOREIGN KEY (fiscal_code) REFERENCES customers (fiscal_code)
 );
 
--- Table: membership_decorators
-CREATE TABLE membership_decorators
+-- Table: membership_extensions
+CREATE TABLE membership_extensions
 (
     customer  TEXT NOT NULL,
-    decorator TEXT NOT NULL, -- Type of decorator (e.g. "weekend")
+    decorator TEXT NOT NULL, -- Type of extension (e.g. "weekend")
     PRIMARY KEY (customer, decorator),
     FOREIGN KEY (customer) REFERENCES memberships (fiscal_code),
     FOREIGN KEY (decorator) REFERENCES membership_decorators (customer)
