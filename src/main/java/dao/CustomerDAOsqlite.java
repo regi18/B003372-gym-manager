@@ -11,11 +11,11 @@ public class CustomerDAOsqlite implements CustomerDAO {
     private MembershipDAOsqlite membershipDAO = new MembershipDAOsqlite;
 
     @Override
-    public Customer get(int id) throws SQLException {
+    public Customer get(String fiscalCode) throws SQLException {
         Connection con = Database.getConnection();
         Customer customer = null;
-        PreparedStatement ps = con.prepareStatement("SELECT * FROM customers WHERE id = ?");
-        ps.setInt(1, id);
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM customers WHERE fiscal_code = ?");
+        ps.setString(1, fiscalCode);
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
