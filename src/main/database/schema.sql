@@ -1,8 +1,16 @@
 -- Schema that represents the database structure
 -- Syntax: SQLite
 
+-- Drop tables if they already exist
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS trainers;
+DROP TABLE IF EXISTS courses;
+DROP TABLE IF EXISTS memberships;
+DROP TABLE IF EXISTS membership_extensions;
+DROP TABLE IF EXISTS bookings;
+
 -- Table: customers
-CREATE TABLE customers
+CREATE TABLE IF NOT EXISTS customers
 (
     fiscal_code TEXT PRIMARY KEY,
     name        TEXT NOT NULL,
@@ -10,7 +18,7 @@ CREATE TABLE customers
 );
 
 -- Table: trainers
-CREATE TABLE trainers
+CREATE TABLE IF NOT EXISTS trainers
 (
     fiscal_code TEXT PRIMARY KEY,
     name        TEXT NOT NULL,
@@ -19,44 +27,42 @@ CREATE TABLE trainers
 );
 
 -- Table: courses
-CREATE TABLE courses
+CREATE TABLE IF NOT EXISTS courses
 (
-    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
-    name                TEXT    NOT NULL,
-    max_capacity        INTEGER NOT NULL,
-    start_date          TEXT    NOT NULL,
-    end_date            TEXT    NOT NULL,
-    trainer_fiscal_code TEXT    NOT NULL,
-    FOREIGN KEY (trainer_fiscal_code) REFERENCES trainers (fiscal_code)
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    name         TEXT    NOT NULL,
+    max_capacity INTEGER NOT NULL,
+    start_date   TEXT    NOT NULL,
+    end_date     TEXT    NOT NULL,
+    trainer      TEXT    NOT NULL,
+    FOREIGN KEY (trainer) REFERENCES trainers (fiscal_code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Table: memberships
-CREATE TABLE memberships
+CREATE TABLE IF NOT EXISTS memberships
 (
-    fiscal_code TEXT PRIMARY KEY,
-    uses        INTEGER NOT NULL DEFAULT 0,
-    price       REAL    NOT NULL DEFAULT 0,
-    valid_from  TEXT    NOT NULL,
-    valid_until TEXT    NOT NULL,
-    FOREIGN KEY (fiscal_code) REFERENCES customers (fiscal_code)
+    customer    TEXT PRIMARY KEY,
+    valid_from  TEXT NOT NULL,
+    valid_until TEXT NOT NULL,
+    FOREIGN KEY (customer) REFERENCES customers (fiscal_code) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Table: membership_extensions
-CREATE TABLE membership_extensions
+CREATE TABLE IF NOT EXISTS membership_extensions
 (
-    customer  TEXT NOT NULL,
-    decorator TEXT NOT NULL, -- Type of extension (e.g. "weekend")
-    PRIMARY KEY (customer, decorator),
-    FOREIGN KEY (customer) REFERENCES memberships (fiscal_code),
-    FOREIGN KEY (decorator) REFERENCES membership_decorators (customer)
+    customer TEXT    NOT NULL,
+    type     TEXT    NOT NULL, -- Type of extension (e.g. "weekend")
+    uses     INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (customer, type),
+    FOREIGN KEY (customer) REFERENCES memberships (customer) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Table: bookings (many-to-many between courses and customers)
-CREATE TABLE bookings
+CREATE TABLE IF NOT EXISTS bookings
 (
     course   INTEGER NOT NULL,
     customer TEXT    NOT NULL,
     PRIMARY KEY (course, customer),
-    FOREIGN KEY (course) REFERENCES courses (id),
-    FOREIGN KEY (customer) REFERENCES customers (fiscal_code)
+    FOREIGN KEY (course) REFERENCES courses (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (customer) REFERENCES customers (fiscal_code) ON UPDATE CASCADE ON DELETE CASCADE
 );
