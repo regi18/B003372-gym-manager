@@ -1,16 +1,17 @@
 package models;
+
 import models.membership.Membership;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Collections.unmodifiableList;
 
 
 public class Course {
-    private static int nextId = 0;
-    private final int id;
+    private Integer id = null;
     private final String name;
     private final int maxCapacity;
     private final LocalDateTime startDate;
@@ -19,7 +20,6 @@ public class Course {
     private final Trainer trainer;
 
     public Course(String name, int maxCapacity, LocalDateTime startDate, LocalDateTime endDate, Trainer trainer) {
-        this.id = nextId++;
         this.name = name;
         this.maxCapacity = maxCapacity;
         this.startDate = startDate;
@@ -30,9 +30,16 @@ public class Course {
             throw new IllegalArgumentException("endDate should be greater than startDate");
     }
 
+    public Course(Integer id, String name, int maxCapacity, LocalDateTime startDate, LocalDateTime endDate, Trainer trainer) {
+        this(name, maxCapacity, startDate, endDate, trainer);   // Delegate the other constructor
+        this.id = id;
+    }
+
     /**
      * Adds a new customer to this course
+     *
      * @param c The custom to add
+     *
      * @throws RuntimeException when course if full or membership is not valid
      */
     public void addAttendee(Customer c) throws RuntimeException {
@@ -50,7 +57,9 @@ public class Course {
 
     /**
      * Removes an attendee
+     *
      * @param fiscalCode The fiscal code of the attendee to remove
+     *
      * @return true if removed, false otherwise
      */
     public boolean removeAttendee(String fiscalCode) {
@@ -69,7 +78,7 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return id == course.id;
+        return Objects.equals(id, course.id);
     }
 
     // ----- PRIVATE METHODS -----

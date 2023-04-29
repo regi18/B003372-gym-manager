@@ -74,13 +74,13 @@ public class CourseDAOsqlite implements CourseDAO {
     @Override
     public int insert(Course course) throws SQLException {
         Connection connection = Database.getConnection();
-        PreparedStatement ps = connection.prepareStatement("INSERT INTO courses (id, name, max_capacity, start_date, end_date, trainer) VALUES (?, ?, ?, ?, ?, ?)");
-        ps.setInt(1, course.getId());
-        ps.setString(2, course.getName());
-        ps.setInt(3, course.getMaxCapacity());
-        ps.setTimestamp(4, Timestamp.valueOf(course.getStartDate()));
-        ps.setTimestamp(5, Timestamp.valueOf(course.getEndDate()));
-        ps.setString(6, course.getTrainer().getFiscalCode());
+        PreparedStatement ps = connection.prepareStatement("INSERT INTO courses (name, max_capacity, start_date, end_date, trainer) VALUES (?, ?, ?, ?, ?)");
+        // id is auto-incremented, so it's not needed
+        ps.setString(1, course.getName());
+        ps.setInt(2, course.getMaxCapacity());
+        ps.setTimestamp(3, Timestamp.valueOf(course.getStartDate()));
+        ps.setTimestamp(4, Timestamp.valueOf(course.getEndDate()));
+        ps.setString(5, course.getTrainer().getFiscalCode());
         int rows = ps.executeUpdate();
 
         // Add bookings for course in the bookings table
@@ -127,5 +127,18 @@ public class CourseDAOsqlite implements CourseDAO {
         Database.closePreparedStatement(ps);
         Database.closeConnection(connection);
         return rows;
+    }
+
+    @Override
+    public int getNextID() throws Exception {
+        Connection connection = Database.getConnection();
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT MAX(id) FROM courses");
+        int id = rs.getInt(1) + 1;
+
+        Database.closeResultSet(rs);
+        Database.closeStatement(stmt);
+        Database.closeConnection(connection);
+        return id;
     }
 }
