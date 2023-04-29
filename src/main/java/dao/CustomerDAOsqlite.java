@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CustomerDAOsqlite implements CustomerDAO {
 
-    private MembershipDAOsqlite membershipDAO = new MembershipDAOsqlite;
+    private final MembershipDAOsqlite membershipDAO = new MembershipDAOsqlite();
 
     @Override
     public Customer get(String fiscalCode) throws SQLException {
@@ -23,7 +23,7 @@ public class CustomerDAOsqlite implements CustomerDAO {
                     rs.getString("fiscal_code"),
                     rs.getString("name"),
                     rs.getString("surname"),
-                    membershipDAO.getOfCustomer(rs.getInt("id"))
+                    membershipDAO.getOfCustomer(rs.getString("fiscal_code"))
             );
         }
 
@@ -61,7 +61,7 @@ public class CustomerDAOsqlite implements CustomerDAO {
         ps.setString(3, customer.getSurname());
         int rows = ps.executeUpdate();
 
-        membershipDAO.insert(customer.getMembership());
+        membershipDAO.insertOfCustomer(customer.getFiscalCode(), customer.getMembership());
 
         Database.closePreparedStatement(ps);
         Database.closeConnection(connection);
@@ -93,7 +93,8 @@ public class CustomerDAOsqlite implements CustomerDAO {
         ps.setString(1, customer.getFiscalCode());
         int rows = ps.executeUpdate();
 
-        membershipDAO.deleteOfCustomer(customer.getFiscalCode());
+        // Not needed because of the ON DELETE CASCADE constraint
+        // membershipDAO.deleteOfCustomer(customer.getFiscalCode());
 
         Database.closePreparedStatement(ps);
         Database.closeConnection(connection);

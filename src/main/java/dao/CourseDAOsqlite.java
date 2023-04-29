@@ -26,7 +26,7 @@ public class CourseDAOsqlite implements CourseDAO {
                     rs.getInt("max_capacity"),
                     rs.getTimestamp("start_date").toLocalDateTime(),
                     rs.getTimestamp("end_date").toLocalDateTime(),
-                    trainerDAO.get(rs.getInt("id"))
+                    trainerDAO.get(rs.getString("trainer"))
             );
         }
 
@@ -58,7 +58,7 @@ public class CourseDAOsqlite implements CourseDAO {
                     rs.getInt("max_capacity"),
                     rs.getTimestamp("start_date").toLocalDateTime(),
                     rs.getTimestamp("end_date").toLocalDateTime(),
-                    trainerDAO.get(rs.getInt("id"))
+                    trainerDAO.get(rs.getString("trainer"))
             );
 
             addBookingsToCourse(c);    // Fetch bookings for course and add them to course
@@ -74,7 +74,7 @@ public class CourseDAOsqlite implements CourseDAO {
     @Override
     public int insert(Course course) throws SQLException {
         Connection connection = Database.getConnection();
-        PreparedStatement ps = connection.prepareStatement("INSERT INTO courses (id, name, max_capacity, start_date, end_date, trainer_fiscal_code) VALUES (?, ?, ?, ?, ?, ?)");
+        PreparedStatement ps = connection.prepareStatement("INSERT INTO courses (id, name, max_capacity, start_date, end_date, trainer) VALUES (?, ?, ?, ?, ?, ?)");
         ps.setInt(1, course.getId());
         ps.setString(2, course.getName());
         ps.setInt(3, course.getMaxCapacity());
@@ -95,7 +95,7 @@ public class CourseDAOsqlite implements CourseDAO {
     @Override
     public int update(Course course) throws SQLException {
         Connection connection = Database.getConnection();
-        PreparedStatement ps = connection.prepareStatement("UPDATE courses SET name = ?, max_capacity = ?, start_date = ?, end_date = ?, trainer_fiscal_code = ? WHERE id = ?");
+        PreparedStatement ps = connection.prepareStatement("UPDATE courses SET name = ?, max_capacity = ?, start_date = ?, end_date = ?, trainer = ? WHERE id = ?");
         ps.setString(1, course.getName());
         ps.setInt(2, course.getMaxCapacity());
         ps.setTimestamp(3, Timestamp.valueOf(course.getStartDate()));

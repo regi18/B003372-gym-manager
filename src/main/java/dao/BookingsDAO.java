@@ -12,7 +12,7 @@ public interface BookingsDAO {
 
     public List<Course> getCoursesOfCustomer(String fiscalCode) throws SQLException;
 
-    public boolean addBooking(String fiscalCode, Integer courseId) throws SQLException;
+    public void addBooking(String fiscalCode, Integer courseId) throws SQLException;
 
-    public boolean deleteBooking(String fiscalCode, Integer courseId) throws SQLException;
+    public void deleteBooking(String fiscalCode, Integer courseId) throws SQLException;
 }

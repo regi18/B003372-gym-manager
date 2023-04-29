@@ -53,11 +53,9 @@ public class BookingsDAOsqlite implements BookingsDAO {
      *
      * @param fiscalCode Fiscal code of the customer
      * @param courseId   id of the course
-     *
-     * @return true if the booking was added, false otherwise
      */
     @Override
-    public boolean addBooking(String fiscalCode, Integer courseId) throws SQLException {
+    public void addBooking(String fiscalCode, Integer courseId) throws SQLException {
         Connection connection = Database.getConnection();
         PreparedStatement ps = connection.prepareStatement("INSERT OR IGNORE INTO bookings (customer, course) VALUES (?, ?)");
         ps.setString(1, fiscalCode);
@@ -66,11 +64,10 @@ public class BookingsDAOsqlite implements BookingsDAO {
 
         Database.closePreparedStatement(ps);
         Database.closeConnection(connection);
-        return result == 1;
     }
 
     @Override
-    public boolean deleteBooking(String fiscalCode, Integer courseId) throws SQLException {
+    public void deleteBooking(String fiscalCode, Integer courseId) throws SQLException {
         Connection connection = Database.getConnection();
         PreparedStatement ps = connection.prepareStatement("DELETE FROM bookings WHERE customer = ? AND course = ?");
         ps.setString(1, fiscalCode);
@@ -79,6 +76,5 @@ public class BookingsDAOsqlite implements BookingsDAO {
 
         Database.closePreparedStatement(ps);
         Database.closeConnection(connection);
-        return result == 1;
     }
 }

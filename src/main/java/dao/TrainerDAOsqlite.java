@@ -9,11 +9,11 @@ import java.util.List;
 public class TrainerDAOsqlite implements TrainerDAO {
 
     @Override
-    public Trainer get(int id) throws SQLException {
+    public Trainer get(String fiscalCode) throws SQLException {
         Connection con = Database.getConnection();
         Trainer trainer = null;
         PreparedStatement ps = con.prepareStatement("SELECT * FROM trainers WHERE fiscal_code = ?");
-        ps.setInt(1, id);
+        ps.setString(1, fiscalCode);
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
