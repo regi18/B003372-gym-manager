@@ -5,13 +5,13 @@ import java.util.List;
 
 public interface DAO<T, PK_TYPE> {
 
-    T get(PK_TYPE pk) throws SQLException;
+    T get(PK_TYPE pk);
 
-    List<T> getAll() throws SQLException;
+    List<T> getAll();
 
-    int insert(T t) throws SQLException;
+    int insert(T t);
 
-    int update(T t) throws SQLException;
+    int update(T t);
 
-    int delete(T t) throws SQLException;
+    int delete(T t);
 }
