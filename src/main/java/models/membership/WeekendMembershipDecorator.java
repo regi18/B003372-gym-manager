@@ -13,6 +13,11 @@ public class WeekendMembershipDecorator extends MembershipDecorator {
         super(membership);
     }
 
+    public WeekendMembershipDecorator(Membership membership, int uses) {
+        super(membership);
+        this.uses = uses;
+    }
+
     @Override
     public boolean isValidForInterval(LocalDateTime start, LocalDateTime end) {
         if (!this.isDateIntervalValid(start, end)) return false;
@@ -27,8 +32,13 @@ public class WeekendMembershipDecorator extends MembershipDecorator {
     }
 
     @Override
-    public String getUses() {
-        return super.getUses() + "Weekend uses: " + uses + ", ";
+    public String getUsesDescription() {
+        return super.getUsesDescription() + "Weekend uses: " + uses + ", ";
+    }
+
+    @Override
+    public int getUses() {
+        return uses;
     }
 
     private boolean isOnWeekend(LocalDateTime date) {

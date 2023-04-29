@@ -8,9 +8,7 @@ import java.time.LocalDateTime;
  */
 public abstract class MembershipDecorator implements Membership {
 
-    /**
-     * Membership to decorate
-     */
+    /** Membership to decorate */
     protected final Membership membership;
 
     /**
@@ -48,15 +46,25 @@ public abstract class MembershipDecorator implements Membership {
     }
 
     @Override
-    public String getUses() {
+    public String getUsesDescription() {
+        return this.membership.getUsesDescription();
+    }
+
+    @Override
+    public int getUses() {
         return this.membership.getUses();
+    }
+
+    public final Membership getMembership() {
+        return this.membership;
     }
 
     /**
      * Checks if the membership is valid in the given interval
      *
      * @param start Start of the interval
-     * @param end End of the interval
+     * @param end   End of the interval
+     *
      * @return True if the membership is valid in the given interval, false otherwise
      */
     protected boolean isDateIntervalValid(LocalDateTime start, LocalDateTime end) {

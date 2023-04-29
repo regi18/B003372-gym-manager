@@ -42,13 +42,22 @@ public interface Membership {
      *
      * @param start Start of the time interval
      * @param end   End of the time interval
+     *
      * @return boolean - true if the membership is valid for the current interval, false otherwise
      */
     boolean isValidForInterval(LocalDateTime start, LocalDateTime end);
 
     /**
      * Get how many times the various membership decorators have been useful to grant access
+     *
      * @return The string with the details
      */
-    String getUses();
+    String getUsesDescription();
+
+    /**
+     * Get how many times the membership has been useful to grant access
+     *
+     * @return The number of uses
+     */
+    int getUses();
 }

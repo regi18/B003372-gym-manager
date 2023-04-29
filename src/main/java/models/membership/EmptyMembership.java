@@ -53,8 +53,13 @@ public class EmptyMembership implements Membership {
     }
 
     @Override
-    public String getUses() {
+    public String getUsesDescription() {
         return "";
+    }
+
+    @Override
+    public int getUses() {
+        return 0;
     }
 
     @Override
