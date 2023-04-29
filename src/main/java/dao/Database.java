@@ -17,7 +17,7 @@ public class Database {
      * @return Connection to the SQLite database
      */
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:sqlite:C:/sqlite/db/gym.db");
+        return DriverManager.getConnection("jdbc:sqlite:gym.db");
     }
 
     /**

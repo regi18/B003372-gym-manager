@@ -57,7 +57,7 @@ public class CustomerDAOsqlite implements CustomerDAO {
             return customers;
         } catch (SQLException e) {
             System.out.println("Unable to get all customers: " + e.getMessage());
-            return null;
+            return new ArrayList<>();
         }
     }
 

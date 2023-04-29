@@ -77,7 +77,7 @@ public class CourseDAOsqlite implements CourseDAO {
             return courses;
         } catch (SQLException e) {
             System.out.println("Unable to get courses: " + e.getMessage());
-            return null;
+            return new ArrayList<>();
         }
     }
 

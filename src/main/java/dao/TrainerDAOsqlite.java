@@ -56,7 +56,7 @@ public class TrainerDAOsqlite implements TrainerDAO {
             return trainers;
         } catch (SQLException e) {
             System.out.println("Unable to get all trainers: " + e.getMessage());
-            return null;
+            return new ArrayList<>();
         }
     }
 

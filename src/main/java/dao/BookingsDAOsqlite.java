@@ -18,7 +18,6 @@ public class BookingsDAOsqlite implements BookingsDAO {
     @Override
     public List<Customer> getCustomersOfCourse(Integer courseId) {
         try {
-
             Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM bookings WHERE course = ?");
             ps.setInt(1, courseId);
@@ -33,7 +32,7 @@ public class BookingsDAOsqlite implements BookingsDAO {
             return customers;
         } catch (SQLException e) {
             System.out.println("Unable to get customers of course: " + e.getMessage());
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -54,7 +53,7 @@ public class BookingsDAOsqlite implements BookingsDAO {
             return courses;
         } catch (SQLException e) {
             System.out.println("Unable to get courses of customer: " + e.getMessage());
-            return null;
+            return new ArrayList<>();
         }
     }
 
