@@ -61,7 +61,7 @@ public class TrainerDAOsqlite implements TrainerDAO {
     }
 
     @Override
-    public int insert(Trainer trainer) {
+    public void insert(Trainer trainer) {
         try {
             Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement("INSERT INTO trainers (fiscal_code, name, surname, salary) VALUES (?, ?, ?, ?)");
@@ -69,18 +69,16 @@ public class TrainerDAOsqlite implements TrainerDAO {
             ps.setString(2, trainer.getName());
             ps.setString(3, trainer.getSurname());
             ps.setFloat(4, trainer.getSalary());
-            int rows = ps.executeUpdate();
+            ps.executeUpdate();
             ps.close();
             Database.closeConnection(connection);
-            return rows;
         } catch (SQLException e) {
             System.out.println("Unable to insert trainer: " + e.getMessage());
-            return 0;
         }
     }
 
     @Override
-    public int update(Trainer trainer) {
+    public void update(Trainer trainer) {
         try {
             Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement("UPDATE trainers SET name = ?, surname = ?, salary = ? WHERE fiscal_code = ?");
@@ -88,29 +86,25 @@ public class TrainerDAOsqlite implements TrainerDAO {
             ps.setString(2, trainer.getSurname());
             ps.setFloat(3, trainer.getSalary());
             ps.setString(4, trainer.getFiscalCode());
-            int rows = ps.executeUpdate();
+            ps.executeUpdate();
             ps.close();
             Database.closeConnection(connection);
-            return rows;
         } catch (SQLException e) {
             System.out.println("Unable to update trainer: " + e.getMessage());
-            return 0;
         }
     }
 
     @Override
-    public int delete(Trainer trainer) {
+    public void delete(Trainer trainer) {
         try {
             Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement("DELETE FROM trainers WHERE fiscal_code = ?");
             ps.setString(1, trainer.getFiscalCode());
-            int rows = ps.executeUpdate();
+            ps.executeUpdate();
             ps.close();
             Database.closeConnection(connection);
-            return rows;
         } catch (SQLException e) {
             System.out.println("Unable to delete trainer: " + e.getMessage());
-            return 0;
         }
     }
 }

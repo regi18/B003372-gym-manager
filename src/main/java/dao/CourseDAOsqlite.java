@@ -82,7 +82,7 @@ public class CourseDAOsqlite implements CourseDAO {
     }
 
     @Override
-    public int insert(Course course) {
+    public void insert(Course course) {
         try {
             Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement("INSERT INTO courses (name, max_capacity, start_date, end_date, trainer) VALUES (?, ?, ?, ?, ?)");
@@ -92,7 +92,7 @@ public class CourseDAOsqlite implements CourseDAO {
             ps.setTimestamp(3, Timestamp.valueOf(course.getStartDate()));
             ps.setTimestamp(4, Timestamp.valueOf(course.getEndDate()));
             ps.setString(5, course.getTrainer().getFiscalCode());
-            int rows = ps.executeUpdate();
+            ps.executeUpdate();
 
             // Add bookings for course in the bookings table
             for (Customer customer : course.getAttendees())
@@ -100,15 +100,13 @@ public class CourseDAOsqlite implements CourseDAO {
 
             ps.close();
             Database.closeConnection(connection);
-            return rows;
         } catch (SQLException e) {
             System.out.println("Unable to insert course: " + e.getMessage());
-            return 0;
         }
     }
 
     @Override
-    public int update(Course course) {
+    public void update(Course course) {
         try {
             Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement("UPDATE courses SET name = ?, max_capacity = ?, start_date = ?, end_date = ?, trainer = ? WHERE id = ?");
@@ -118,7 +116,7 @@ public class CourseDAOsqlite implements CourseDAO {
             ps.setTimestamp(4, Timestamp.valueOf(course.getEndDate()));
             ps.setString(5, course.getTrainer().getFiscalCode());
             ps.setInt(6, course.getId());
-            int rows = ps.executeUpdate();
+            ps.executeUpdate();
 
             // Update bookings for course in the bookings table
             for (Customer customer : course.getAttendees())
@@ -126,20 +124,18 @@ public class CourseDAOsqlite implements CourseDAO {
 
             ps.close();
             Database.closeConnection(connection);
-            return rows;
         } catch (SQLException e) {
             System.out.println("Unable to update course: " + e.getMessage());
-            return 0;
         }
     }
 
     @Override
-    public int delete(Course course) {
+    public void delete(Course course) {
         try {
             Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement("DELETE FROM courses WHERE id = ?");
             ps.setInt(1, course.getId());
-            int rows = ps.executeUpdate();
+            ps.executeUpdate();
 
             // Delete bookings for course in the bookings table
             for (Customer customer : course.getAttendees())
@@ -147,10 +143,8 @@ public class CourseDAOsqlite implements CourseDAO {
 
             ps.close();
             Database.closeConnection(connection);
-            return rows;
         } catch (SQLException e) {
             System.out.println("Unable to delete course: " + e.getMessage());
-            return 0;
         }
     }
 

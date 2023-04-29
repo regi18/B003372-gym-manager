@@ -9,9 +9,9 @@ public interface DAO<T, PK_TYPE> {
 
     List<T> getAll();
 
-    int insert(T t);
+    void insert(T t);
 
-    int update(T t);
+    void update(T t);
 
-    int delete(T t);
+    void delete(T t);
 }
