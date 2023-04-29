@@ -27,8 +27,8 @@ public class BookingsDAOsqlite implements BookingsDAO {
             List<Customer> customers = new ArrayList<>();
             while (rs.next()) customers.add(customerDAO.get(rs.getString("fiscal_code")));
 
-            Database.closeResultSet(rs);
-            Database.closePreparedStatement(ps);
+            rs.close();
+            ps.close();
             Database.closeConnection(connection);
             return customers;
         } catch (SQLException e) {
@@ -48,8 +48,8 @@ public class BookingsDAOsqlite implements BookingsDAO {
             List<Course> courses = new ArrayList<>();
             while (rs.next()) courses.add(courseDAO.get(rs.getInt("course")));
 
-            Database.closeResultSet(rs);
-            Database.closePreparedStatement(ps);
+            rs.close();
+            ps.close();
             Database.closeConnection(connection);
             return courses;
         } catch (SQLException e) {
@@ -74,7 +74,7 @@ public class BookingsDAOsqlite implements BookingsDAO {
             ps.setInt(2, courseId);
             ps.executeUpdate();
 
-            Database.closePreparedStatement(ps);
+            ps.close();
             Database.closeConnection(connection);
         } catch (SQLException e) {
             System.out.println("Unable to add booking: " + e.getMessage());
@@ -90,7 +90,7 @@ public class BookingsDAOsqlite implements BookingsDAO {
             ps.setInt(2, courseId);
             ps.executeUpdate();
 
-            Database.closePreparedStatement(ps);
+            ps.close();
             Database.closeConnection(connection);
         } catch (SQLException e) {
             System.out.println("Unable to delete booking: " + e.getMessage());

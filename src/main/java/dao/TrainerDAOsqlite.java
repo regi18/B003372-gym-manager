@@ -26,8 +26,8 @@ public class TrainerDAOsqlite implements TrainerDAO {
                 );
             }
 
-            Database.closeResultSet(rs);
-            Database.closePreparedStatement(ps);
+            rs.close();
+            ps.close();
             Database.closeConnection(con);
             return trainer;
         } catch (SQLException e) {
@@ -70,7 +70,7 @@ public class TrainerDAOsqlite implements TrainerDAO {
             ps.setString(3, trainer.getSurname());
             ps.setFloat(4, trainer.getSalary());
             int rows = ps.executeUpdate();
-            Database.closePreparedStatement(ps);
+            ps.close();
             Database.closeConnection(connection);
             return rows;
         } catch (SQLException e) {
@@ -89,7 +89,7 @@ public class TrainerDAOsqlite implements TrainerDAO {
             ps.setFloat(3, trainer.getSalary());
             ps.setString(4, trainer.getFiscalCode());
             int rows = ps.executeUpdate();
-            Database.closePreparedStatement(ps);
+            ps.close();
             Database.closeConnection(connection);
             return rows;
         } catch (SQLException e) {
@@ -105,7 +105,7 @@ public class TrainerDAOsqlite implements TrainerDAO {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM trainers WHERE fiscal_code = ?");
             ps.setString(1, trainer.getFiscalCode());
             int rows = ps.executeUpdate();
-            Database.closePreparedStatement(ps);
+            ps.close();
             Database.closeConnection(connection);
             return rows;
         } catch (SQLException e) {

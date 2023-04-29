@@ -47,12 +47,12 @@ public class MembershipDAOsqlite implements MembershipDAO {
                     }
                 }
 
-                Database.closeResultSet(rs2);
-                Database.closePreparedStatement(ps2);
+                rs2.close();
+                ps2.close();
             }
 
-            Database.closeResultSet(rs);
-            Database.closePreparedStatement(ps);
+            rs.close();
+            ps.close();
             Database.closeConnection(connection);
             return membership;
         } catch (SQLException e) {
@@ -70,7 +70,7 @@ public class MembershipDAOsqlite implements MembershipDAO {
             insertMembership.setDate(2, Date.valueOf(membership.getValidFrom()));
             insertMembership.setDate(3, Date.valueOf(membership.getValidUntil()));
             insertMembership.executeUpdate();
-            Database.closePreparedStatement(insertMembership);
+            insertMembership.close();
 
             // Insert extensions to database
             insertExtensionsOfCustomer(fiscalCode, membership);
@@ -90,7 +90,7 @@ public class MembershipDAOsqlite implements MembershipDAO {
             updateMembership.setDate(2, Date.valueOf(membership.getValidUntil()));
             updateMembership.setString(3, fiscalCode);
             updateMembership.executeUpdate();
-            Database.closePreparedStatement(updateMembership);
+            updateMembership.close();
 
             // Update extensions (delete all and reinsert)
             deleteExtensionsOfCustomer(fiscalCode);
@@ -109,7 +109,7 @@ public class MembershipDAOsqlite implements MembershipDAO {
             PreparedStatement deleteMembership = connection.prepareStatement("DELETE FROM memberships WHERE customer = ?");
             deleteMembership.setString(1, fiscalCode);
             deleteMembership.executeUpdate();
-            Database.closePreparedStatement(deleteMembership);
+            deleteMembership.close();
 
             // No need to delete extensions, they will be deleted automatically by the database (ON DELETE CASCADE)
             // deleteExtensionsOfCustomer(fiscalCode);
@@ -136,7 +136,7 @@ public class MembershipDAOsqlite implements MembershipDAO {
                 membership = membershipDecorator.getMembership();
             }
 
-            Database.closePreparedStatement(insertExtension);
+            insertExtension.close();
             Database.closeConnection(connection);
         } catch (SQLException e) {
             System.out.println("Unable to insert extensions of customer: " + e.getMessage());
@@ -149,7 +149,7 @@ public class MembershipDAOsqlite implements MembershipDAO {
             PreparedStatement deleteExtensions = connection.prepareStatement("DELETE FROM membership_extensions WHERE customer = ?");
             deleteExtensions.setString(1, fiscalCode);
             deleteExtensions.executeUpdate();
-            Database.closePreparedStatement(deleteExtensions);
+            deleteExtensions.close();
             Database.closeConnection(connection);
         } catch (SQLException e) {
             System.out.println("Unable to delete extensions of customer: " + e.getMessage());

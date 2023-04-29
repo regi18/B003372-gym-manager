@@ -31,8 +31,8 @@ public class CourseDAOsqlite implements CourseDAO {
                 );
             }
 
-            Database.closeResultSet(rs);
-            Database.closePreparedStatement(ps);
+            rs.close();
+            ps.close();
 
             // Fetch bookings for course and add them to course
             if (course != null) addBookingsToCourse(course);
@@ -71,8 +71,8 @@ public class CourseDAOsqlite implements CourseDAO {
                 courses.add(c);
             }
 
-            Database.closeResultSet(rs);
-            Database.closeStatement(stmt);
+            rs.close();
+            stmt.close();
             Database.closeConnection(connection);
             return courses;
         } catch (SQLException e) {
@@ -98,7 +98,7 @@ public class CourseDAOsqlite implements CourseDAO {
             for (Customer customer : course.getAttendees())
                 bookingsDAO.addBooking(customer.getFiscalCode(), course.getId());
 
-            Database.closePreparedStatement(ps);
+            ps.close();
             Database.closeConnection(connection);
             return rows;
         } catch (SQLException e) {
@@ -124,7 +124,7 @@ public class CourseDAOsqlite implements CourseDAO {
             for (Customer customer : course.getAttendees())
                 bookingsDAO.addBooking(customer.getFiscalCode(), course.getId());
 
-            Database.closePreparedStatement(ps);
+            ps.close();
             Database.closeConnection(connection);
             return rows;
         } catch (SQLException e) {
@@ -145,7 +145,7 @@ public class CourseDAOsqlite implements CourseDAO {
             for (Customer customer : course.getAttendees())
                 bookingsDAO.deleteBooking(customer.getFiscalCode(), course.getId());
 
-            Database.closePreparedStatement(ps);
+            ps.close();
             Database.closeConnection(connection);
             return rows;
         } catch (SQLException e) {
@@ -162,8 +162,8 @@ public class CourseDAOsqlite implements CourseDAO {
             ResultSet rs = stmt.executeQuery("SELECT MAX(id) FROM courses");
             int id = rs.getInt(1) + 1;
 
-            Database.closeResultSet(rs);
-            Database.closeStatement(stmt);
+            rs.close();
+            stmt.close();
             Database.closeConnection(connection);
             return id;
         } catch (SQLException e) {

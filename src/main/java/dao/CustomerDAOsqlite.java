@@ -27,8 +27,8 @@ public class CustomerDAOsqlite implements CustomerDAO {
             );
         }
 
-        Database.closeResultSet(rs);
-        Database.closePreparedStatement(ps);
+        rs.close();
+        ps.close();
         Database.closeConnection(con);
         return customer;
     }
@@ -63,7 +63,7 @@ public class CustomerDAOsqlite implements CustomerDAO {
 
         membershipDAO.insertOfCustomer(customer.getFiscalCode(), customer.getMembership());
 
-        Database.closePreparedStatement(ps);
+        ps.close();
         Database.closeConnection(connection);
         return rows;
     }
@@ -80,7 +80,7 @@ public class CustomerDAOsqlite implements CustomerDAO {
 
         membershipDAO.updateOfCustomer(customer.getFiscalCode(), customer.getMembership());
 
-        Database.closePreparedStatement(ps);
+        ps.close();
         Database.closeConnection(connection);
         return rows;
     }
@@ -96,7 +96,7 @@ public class CustomerDAOsqlite implements CustomerDAO {
         // Not needed because of the ON DELETE CASCADE constraint
         // membershipDAO.deleteOfCustomer(customer.getFiscalCode());
 
-        Database.closePreparedStatement(ps);
+        ps.close();
         Database.closeConnection(connection);
         return rows;
     }
