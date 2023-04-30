@@ -9,8 +9,13 @@ import java.util.List;
 
 public class CourseDAOsqlite implements CourseDAO {
 
-    private final TrainerDAOsqlite trainerDAO = new TrainerDAOsqlite();
-    private final BookingsDAOsqlite bookingsDAO = new BookingsDAOsqlite();
+    private final TrainerDAO trainerDAO;
+    private final CustomerDAO customerDAO;
+
+    public CourseDAOsqlite(TrainerDAO trainerDAO, CustomerDAO customerDAO) {
+        this.trainerDAO = trainerDAO;
+        this.customerDAO = customerDAO;
+    }
 
     @Override
     public Course get(Integer id) {
@@ -22,7 +27,7 @@ public class CourseDAOsqlite implements CourseDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                course = new Course(    // TODO: Add id from db, and remove static nextId from Course
+                course = new Course(
                         rs.getString("name"),
                         rs.getInt("max_capacity"),
                         rs.getTimestamp("start_date").toLocalDateTime(),
@@ -46,7 +51,7 @@ public class CourseDAOsqlite implements CourseDAO {
     }
 
     private void addBookingsToCourse(Course course) throws SQLException {
-        List<Customer> bookedCustomers = bookingsDAO.getCustomersOfCourse(course.getId());
+        List<Customer> bookedCustomers = getCustomersOfCourse(course.getId());
         for (Customer customer : bookedCustomers) course.addAttendee(customer);
     }
 
@@ -96,7 +101,7 @@ public class CourseDAOsqlite implements CourseDAO {
 
             // Add bookings for course in the bookings table
             for (Customer customer : course.getAttendees())
-                bookingsDAO.addBooking(customer.getFiscalCode(), course.getId());
+                addBooking(customer.getFiscalCode(), course.getId());
 
             ps.close();
             Database.closeConnection(connection);
@@ -120,7 +125,7 @@ public class CourseDAOsqlite implements CourseDAO {
 
             // Update bookings for course in the bookings table
             for (Customer customer : course.getAttendees())
-                bookingsDAO.addBooking(customer.getFiscalCode(), course.getId());
+                addBooking(customer.getFiscalCode(), course.getId());
 
             ps.close();
             Database.closeConnection(connection);
@@ -139,7 +144,7 @@ public class CourseDAOsqlite implements CourseDAO {
 
             // Delete bookings for course in the bookings table
             for (Customer customer : course.getAttendees())
-                bookingsDAO.deleteBooking(customer.getFiscalCode(), course.getId());
+                deleteBooking(customer.getFiscalCode(), course.getId());
 
             ps.close();
             Database.closeConnection(connection);
@@ -163,6 +168,87 @@ public class CourseDAOsqlite implements CourseDAO {
         } catch (SQLException e) {
             System.out.println("Unable to get next course id: " + e.getMessage());
             return 0;
+        }
+    }
+
+    @Override
+    public List<Customer> getCustomersOfCourse(Integer courseId) {
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM bookings WHERE course = ?");
+            ps.setInt(1, courseId);
+            ResultSet rs = ps.executeQuery();
+
+            List<Customer> customers = new ArrayList<>();
+            while (rs.next()) customers.add(customerDAO.get(rs.getString("fiscal_code")));
+
+            rs.close();
+            ps.close();
+            Database.closeConnection(connection);
+            return customers;
+        } catch (SQLException e) {
+            System.out.println("Unable to get customers of course: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public List<Course> getCoursesOfCustomer(String fiscalCode) {
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM bookings WHERE customer = ?");
+            ps.setString(1, fiscalCode);
+            ResultSet rs = ps.executeQuery();
+
+            List<Course> courses = new ArrayList<>();
+            while (rs.next()) courses.add(this.get(rs.getInt("course")));
+
+            rs.close();
+            ps.close();
+            Database.closeConnection(connection);
+            return courses;
+        } catch (SQLException e) {
+            System.out.println("Unable to get courses of customer: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Adds a booking to the database.
+     * If the customer is already booked for the course, the booking is not added.
+     *
+     * @param fiscalCode Fiscal code of the customer
+     * @param courseId   id of the course
+     */
+    @Override
+    public void addBooking(String fiscalCode, Integer courseId) {
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement ps = connection.prepareStatement("INSERT OR IGNORE INTO bookings (customer, course) VALUES (?, ?)");
+            ps.setString(1, fiscalCode);
+            ps.setInt(2, courseId);
+            ps.executeUpdate();
+
+            ps.close();
+            Database.closeConnection(connection);
+        } catch (SQLException e) {
+            System.out.println("Unable to add booking: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteBooking(String fiscalCode, Integer courseId) {
+        try {
+            Connection connection = Database.getConnection();
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM bookings WHERE customer = ? AND course = ?");
+            ps.setString(1, fiscalCode);
+            ps.setInt(2, courseId);
+            ps.executeUpdate();
+
+            ps.close();
+            Database.closeConnection(connection);
+        } catch (SQLException e) {
+            System.out.println("Unable to delete booking: " + e.getMessage());
         }
     }
 }
