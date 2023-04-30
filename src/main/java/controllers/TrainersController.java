@@ -1,15 +1,15 @@
 package controllers;
 
 import dao.TrainerDAO;
-import dao.TrainerDAOsqlite;
 import models.Trainer;
 
 
 public class TrainersController extends PeopleController<Trainer> {
 
-    private final TrainerDAO trainerDAO = new TrainerDAOsqlite();
+    private final TrainerDAO trainerDAO;
 
-    public TrainersController() {
+    public TrainersController(TrainerDAO trainerDAO) {
+        this.trainerDAO = trainerDAO;
         // Load trainers from the DAO
         for (Trainer t : trainerDAO.getAll()) super.addPerson(t);
     }

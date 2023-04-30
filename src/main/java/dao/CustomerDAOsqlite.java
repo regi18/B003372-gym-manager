@@ -8,7 +8,11 @@ import java.util.List;
 
 public class CustomerDAOsqlite implements CustomerDAO {
 
-    private final MembershipDAOsqlite membershipDAO = new MembershipDAOsqlite();
+    private final MembershipDAO membershipDAO;
+
+    public CustomerDAOsqlite(MembershipDAO membershipDAO) {
+        this.membershipDAO = membershipDAO;
+    }
 
     @Override
     public Customer get(String fiscalCode) {

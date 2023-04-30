@@ -1,7 +1,6 @@
 package controllers;
 
 import dao.CourseDAO;
-import dao.CourseDAOsqlite;
 import models.Course;
 import models.Trainer;
 
@@ -15,10 +14,11 @@ import static java.util.Collections.unmodifiableList;
 public class CoursesController {
     private final ArrayList<Course> courses = new ArrayList<>();
     private final PeopleController<Trainer> trainersController;
-    private final CourseDAO courseDAO = new CourseDAOsqlite();
+    private final CourseDAO courseDAO;
 
-    public CoursesController(PeopleController<Trainer> trainersController) {
+    public CoursesController(PeopleController<Trainer> trainersController, CourseDAO courseDAO) {
         this.trainersController = trainersController;
+        this.courseDAO = courseDAO;
 
         // Load courses from the DAO
         this.courses.addAll(courseDAO.getAll());

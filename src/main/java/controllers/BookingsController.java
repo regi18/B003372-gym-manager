@@ -1,7 +1,6 @@
 package controllers;
 
-import dao.BookingsDAO;
-import dao.BookingsDAOsqlite;
+import dao.CourseDAO;
 import models.Course;
 import models.Customer;
 
@@ -10,10 +9,11 @@ import java.util.List;
 
 public class BookingsController {
     private final CoursesController coursesController;
-    private final BookingsDAO bookingsDAO = new BookingsDAOsqlite();
+    private final CourseDAO coursesDAO;
 
-    public BookingsController(CoursesController coursesController) {
+    public BookingsController(CoursesController coursesController, CourseDAO bookingsDAO) {
         this.coursesController = coursesController;
+        this.coursesDAO = bookingsDAO;
     }
 
     /**
@@ -28,7 +28,7 @@ public class BookingsController {
         Course c = coursesController.getCourse(courseId);
         if (c == null) throw new RuntimeException("The given course id does not exist");
         c.addAttendee(customer);
-        bookingsDAO.addBooking(customer.getFiscalCode(), courseId);
+        coursesDAO.addBooking(customer.getFiscalCode(), courseId);
     }
 
     /**
@@ -42,7 +42,7 @@ public class BookingsController {
     public boolean deleteCourseBooking(Customer customer, int courseId) {
         Course c = coursesController.getCourse(courseId);
         if (c == null) return false;
-        bookingsDAO.deleteBooking(customer.getFiscalCode(), courseId);
+        coursesDAO.deleteBooking(customer.getFiscalCode(), courseId);
         return c.removeAttendee(customer.getFiscalCode());
     }
 
@@ -52,6 +52,6 @@ public class BookingsController {
      * @param fiscalCode The fiscal code of the customer
      */
     public List<Course> getBookingsForCustomer(String fiscalCode) {
-        return bookingsDAO.getCoursesOfCustomer(fiscalCode);
+        return coursesDAO.getCoursesOfCustomer(fiscalCode);
     }
 }

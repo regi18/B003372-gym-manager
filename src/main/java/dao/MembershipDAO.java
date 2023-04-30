@@ -2,8 +2,6 @@ package dao;
 
 import models.membership.Membership;
 
-import java.sql.SQLException;
-
 public interface MembershipDAO {
     Membership getOfCustomer(String fiscalCode);
 

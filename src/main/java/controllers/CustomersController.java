@@ -1,7 +1,6 @@
 package controllers;
 
 import dao.CustomerDAO;
-import dao.CustomerDAOsqlite;
 import models.Customer;
 import models.membership.Membership;
 import models.membership.EmptyMembership;
@@ -9,14 +8,14 @@ import models.membership.WeekdaysMembershipDecorator;
 import models.membership.WeekendMembershipDecorator;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 public class CustomersController extends PeopleController<Customer> {
 
-    private final CustomerDAO customerDAO = new CustomerDAOsqlite();
+    private final CustomerDAO customerDAO;
 
-    public CustomersController() {
+    public CustomersController(CustomerDAO customerDAO) {
+        this.customerDAO = customerDAO;
         // Load customers from the DAO
         for (Customer c : customerDAO.getAll()) super.addPerson(c);
     }
@@ -28,8 +27,8 @@ public class CustomersController extends PeopleController<Customer> {
      * @param membershipDecorators The decorators to apply to the membership (e.g. "weekend", "weekdays", ...)
      * @param membershipEndDate    The membership end date
      */
-    public void addPerson(String fiscalCode, String name, String surname, String[] membershipDecorators, String membershipEndDate) {
-        Membership m = new EmptyMembership(LocalDate.now(), LocalDate.parse(membershipEndDate));
+    public void addPerson(String fiscalCode, String name, String surname, String[] membershipDecorators, LocalDate membershipEndDate) {
+        Membership m = new EmptyMembership(LocalDate.now(), membershipEndDate);
 
         for (String s : membershipDecorators) {
             if (s.equals("weekend")) m = new WeekendMembershipDecorator(m);
