@@ -1,39 +1,46 @@
 package controllers;
 
+import dao.CustomerDAO;
 import models.Customer;
+import models.membership.EmptyMembership;
+import models.membership.Membership;
+import models.membership.WeekendMembershipDecorator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeParseException;
 import java.util.Calendar;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 
 class CustomerControllerTest {
     private CustomersController c;
     private Customer testCustomer;
 
-    @Test
+
     @BeforeEach
-    public void when_AddingNewPerson_Expect_Success() {
-        c = new CustomersController();
-        String[] tmp = {"weekend"};
-        c.addPerson("RSSMRA", "Mario", "Rossi", tmp, "9999-01-01");
-        testCustomer = c.getPerson("RSSMRA");
+    public void init() {
+        CustomerDAO mockedCustomerDAO = Mockito.mock(CustomerDAO.class);
+        Membership membership = new WeekendMembershipDecorator(new EmptyMembership(LocalDate.from(LocalDateTime.now()), LocalDate.parse("9999-01-01")));
+        when(mockedCustomerDAO.getAll()).thenReturn(List.of(new Customer("RSSMRA", "Mario", "Rossi", membership)));
+        when(mockedCustomerDAO.get(any())).thenReturn(new Customer("RSSMRA", "Mario", "Rossi", membership));
+        c = new CustomersController(mockedCustomerDAO);
+        testCustomer = mockedCustomerDAO.get("RSSMRA");
     }
 
     @Test
-    public void when_AddingNewPerson_With_BadDate_Expect_Failure() {
-        String[] tmp = {"test"};
-        Assertions.assertThrows(
-                DateTimeParseException.class,
-                () -> c.addPerson("RSSMRA", "Mario", "Rossi", tmp, ""),
-                "Expected addPerson() to throw, but it didn't"
-        );
+    public void when_AddingNewPerson_Expect_Success() {
+        String[] tmp = {"weekend"};
+        c.addPerson("LGIVRD", "Luigi", "Verdi", tmp, LocalDate.parse("9999-01-01"));
+        testCustomer = c.getPerson("LGIVRD");
+        Assertions.assertEquals("LGIVRD", testCustomer.getFiscalCode());
     }
 
     @Test
@@ -41,15 +48,13 @@ class CustomerControllerTest {
         String[] tmp = {"weekend"};
         Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> c.addPerson("RSSMRA", "Mario", "Rossi", tmp, "9999-01-01"),
+                () -> c.addPerson("RSSMRA", "Mario", "Rossi", tmp, LocalDate.parse("9999-01-01")),
                 "Expected addPerson() to throw, but it didn't"
         );
     }
 
     @Test
     public void when_gettingExistingPerson_Expect_toReturnThatPerson() {
-        String[] tmp = {"weekend"};
-        c.addPerson("AAAAA", "", "", tmp, "9999-01-01");
         Assertions.assertEquals(testCustomer, c.getPerson(testCustomer.getFiscalCode()));
     }
 
@@ -71,15 +76,19 @@ class CustomerControllerTest {
     @Test
     public void when_AddingNewPerson_WithSpecificMembership_Expect_ThatMembershipToWork() {
         String[] tmp = {"weekend"};
-        c.addPerson("EEEEEE", "Mario", "Rossi", tmp, "9999-01-01");
-        testCustomer = c.getPerson("RSSMRA");
+        c.addPerson("PLUTO", "Pluto", "Giallo", tmp, LocalDate.parse("9999-01-01"));
+        testCustomer = c.getPerson("PLUTO");
 
+        // Test if the membership is valid on next thursday
         Calendar c = Calendar.getInstance();
-        c.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+        c.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY); // Thursday of the current week
         LocalDateTime start = c.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         Assertions.assertFalse(testCustomer.getMembership().isValidForInterval(start, start.plusDays(1)));
 
-        c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        // Test if the membership is valid on next saturday
+        c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY); // Saturday of the current week
+        // I add 7 days to get the next saturday, because otherwise if today is sunday this test will fail (because the membership is valid from today)
+        c.add(Calendar.DATE, 7);
         LocalDateTime start2 = c.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         Assertions.assertTrue(testCustomer.getMembership().isValidForInterval(start2, start2.plusDays(1)));
     }

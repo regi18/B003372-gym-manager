@@ -5,6 +5,8 @@ import models.Course;
 import models.Customer;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class BookingsController {
@@ -52,6 +54,8 @@ public class BookingsController {
      * @param fiscalCode The fiscal code of the customer
      */
     public List<Course> getBookingsForCustomer(String fiscalCode) {
-        return coursesDAO.getCoursesOfCustomer(fiscalCode);
+        Stream<Course> s = this.coursesController.getAll().stream().filter(c -> c.getAttendees().stream().anyMatch(customer -> customer.getFiscalCode().equals(fiscalCode)));
+        return s.collect(Collectors.toUnmodifiableList());
     }
+
 }
