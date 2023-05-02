@@ -6,11 +6,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerDAOsqlite implements CustomerDAO {
+public class SQLiteCustomerDAO implements CustomerDAO {
 
     private final MembershipDAO membershipDAO;
 
-    public CustomerDAOsqlite(MembershipDAO membershipDAO) {
+    public SQLiteCustomerDAO(MembershipDAO membershipDAO) {
         this.membershipDAO = membershipDAO;
     }
 

@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrainerDAOsqlite implements TrainerDAO {
+public class SQLiteTrainerDAO implements TrainerDAO {
 
     @Override
     public Trainer get(String fiscalCode) {

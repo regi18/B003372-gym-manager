@@ -7,12 +7,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CourseDAOsqlite implements CourseDAO {
+public class SQLiteCourseDAO implements CourseDAO {
 
     private final TrainerDAO trainerDAO;
     private final CustomerDAO customerDAO;
 
-    public CourseDAOsqlite(TrainerDAO trainerDAO, CustomerDAO customerDAO) {
+    public SQLiteCourseDAO(TrainerDAO trainerDAO, CustomerDAO customerDAO) {
         this.trainerDAO = trainerDAO;
         this.customerDAO = customerDAO;
     }

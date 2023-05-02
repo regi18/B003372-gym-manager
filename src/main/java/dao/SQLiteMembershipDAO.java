@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 
-public class MembershipDAOsqlite implements MembershipDAO {
+public class SQLiteMembershipDAO implements MembershipDAO {
 
     private final Map<String, Class<? extends Membership>> membershipStringToType = Map.ofEntries(
             entry("weekdays", WeekdaysMembershipDecorator.class),

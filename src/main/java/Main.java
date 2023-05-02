@@ -9,10 +9,10 @@ public class Main {
     public static void main(String[] args) {
 
         // DAOs
-        TrainerDAO trainerDAO = new TrainerDAOsqlite();
-        MembershipDAO membershipDAO = new MembershipDAOsqlite();
-        CustomerDAO customerDAO = new CustomerDAOsqlite(membershipDAO);
-        CourseDAO courseDAO = new CourseDAOsqlite(trainerDAO, customerDAO);
+        TrainerDAO trainerDAO = new SQLiteTrainerDAO();
+        MembershipDAO membershipDAO = new SQLiteMembershipDAO();
+        CustomerDAO customerDAO = new SQLiteCustomerDAO(membershipDAO);
+        CourseDAO courseDAO = new SQLiteCourseDAO(trainerDAO, customerDAO);
 
         // Controllers
         TrainersController trainersController = new TrainersController(trainerDAO);
