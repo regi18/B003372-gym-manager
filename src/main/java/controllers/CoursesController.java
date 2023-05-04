@@ -5,23 +5,18 @@ import models.Course;
 import models.Trainer;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
 
 
 public class CoursesController {
-    private final ArrayList<Course> courses = new ArrayList<>();
     private final PeopleController<Trainer> trainersController;
     private final CourseDAO courseDAO;
 
     public CoursesController(PeopleController<Trainer> trainersController, CourseDAO courseDAO) {
         this.trainersController = trainersController;
         this.courseDAO = courseDAO;
-
-        // Load courses from the DAO
-        this.courses.addAll(courseDAO.getAll());
     }
 
     /**
@@ -44,7 +39,6 @@ public class CoursesController {
 
         Course c = new Course(courseDAO.getNextID(), name, maxCapacity, startDate, endDate, trainer);
         courseDAO.insert(c);
-        this.courses.add(c);
         return c.getId();
     }
 
@@ -56,10 +50,7 @@ public class CoursesController {
      * @return true if successful, false otherwise
      */
     public boolean removeCourse(int id) {
-        Course toRemove = getCourse(id);
-        if (toRemove == null) return false;
-        courseDAO.delete(toRemove);
-        return this.courses.remove(toRemove);
+        return courseDAO.delete(id);
     }
 
     /**
@@ -70,10 +61,7 @@ public class CoursesController {
      * @return The course
      */
     public Course getCourse(int id) {
-        for (Course c : courses) {
-            if (c.getId() == id) return c;
-        }
-        return null;
+        return courseDAO.get(id);
     }
 
     /**
@@ -82,6 +70,6 @@ public class CoursesController {
      * @return The list of courses
      */
     public List<Course> getAll() {
-        return unmodifiableList(this.courses);
+        return unmodifiableList(this.courseDAO.getAll());
     }
 }

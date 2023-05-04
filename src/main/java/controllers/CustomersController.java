@@ -12,12 +12,8 @@ import java.time.LocalDate;
 
 public class CustomersController extends PeopleController<Customer> {
 
-    private final CustomerDAO customerDAO;
-
     public CustomersController(CustomerDAO customerDAO) {
-        this.customerDAO = customerDAO;
-        // Load customers from the DAO
-        for (Customer c : customerDAO.getAll()) super.addPerson(c);
+        super(customerDAO);
     }
 
     /**
@@ -37,14 +33,5 @@ public class CustomersController extends PeopleController<Customer> {
 
         Customer c = new Customer(fiscalCode, name, surname, m);
         super.addPerson(c);
-        customerDAO.insert(c);
-    }
-
-    /**
-     * Removes the person with the corresponding fiscalCode
-     */
-    public boolean removePerson(String fiscalCode) {
-        customerDAO.delete(customerDAO.get(fiscalCode));
-        return super.removePerson(fiscalCode);
     }
 }

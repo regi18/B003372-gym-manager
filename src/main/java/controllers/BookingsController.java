@@ -44,8 +44,7 @@ public class BookingsController {
     public boolean deleteCourseBooking(Customer customer, int courseId) {
         Course c = coursesController.getCourse(courseId);
         if (c == null) return false;
-        coursesDAO.deleteBooking(customer.getFiscalCode(), courseId);
-        return c.removeAttendee(customer.getFiscalCode());
+        return c.removeAttendee(customer.getFiscalCode()) && coursesDAO.deleteBooking(customer.getFiscalCode(), courseId);
     }
 
     /**
