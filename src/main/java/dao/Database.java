@@ -12,12 +12,21 @@ public class Database {
     }
 
     /**
-     * Get the connection instance
+     * @param dbName Name of the database file
+     *
+     * @return Connection to the SQLite database
+     */
+    public static Connection getConnection(String dbName) throws SQLException {
+        return DriverManager.getConnection("jdbc:sqlite:" + dbName);
+    }
+
+    /**
+     * Get the default connection instance
      *
      * @return Connection to the SQLite database
      */
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:sqlite:gym.db");
+        return getConnection("gym.db");
     }
 
     /**
