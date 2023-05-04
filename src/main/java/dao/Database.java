@@ -7,8 +7,19 @@ import java.sql.*;
  * Implements the Singleton pattern in order to have a single instance of the Database.
  */
 public class Database {
+    private static String dbName = "gym.db";
+
     // Private constructor (Singleton pattern)
     private Database() {
+    }
+
+    /**
+     * Set the database name
+     *
+     * @param dbName Name of the database file
+     */
+    public static void setDatabase(String dbName) {
+        Database.dbName = dbName;
     }
 
     /**
@@ -26,7 +37,7 @@ public class Database {
      * @return Connection to the SQLite database
      */
     public static Connection getConnection() throws SQLException {
-        return getConnection("gym.db");
+        return getConnection(dbName);
     }
 
     /**
