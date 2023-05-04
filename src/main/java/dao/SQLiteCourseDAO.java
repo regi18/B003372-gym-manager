@@ -135,22 +135,27 @@ public class SQLiteCourseDAO implements CourseDAO {
     }
 
     @Override
-    public void delete(Course course) {
+    public boolean delete(Integer id) {
         try {
+            Course course = get(id);
+            if (course == null) return false;
+
             Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement("DELETE FROM courses WHERE id = ?");
-            ps.setInt(1, course.getId());
-            ps.executeUpdate();
+            ps.setInt(1, id);
+            int rows = ps.executeUpdate();
 
             // Delete bookings for course in the bookings table
             for (Customer customer : course.getAttendees())
-                deleteBooking(customer.getFiscalCode(), course.getId());
+                deleteBooking(customer.getFiscalCode(), id);
 
             ps.close();
             Database.closeConnection(connection);
+            return rows > 0;
         } catch (SQLException e) {
             System.out.println("Unable to delete course: " + e.getMessage());
         }
+        return false;
     }
 
     @Override
@@ -237,18 +242,20 @@ public class SQLiteCourseDAO implements CourseDAO {
     }
 
     @Override
-    public void deleteBooking(String fiscalCode, Integer courseId) {
+    public boolean deleteBooking(String fiscalCode, Integer courseId) {
         try {
             Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement("DELETE FROM bookings WHERE customer = ? AND course = ?");
             ps.setString(1, fiscalCode);
             ps.setInt(2, courseId);
-            ps.executeUpdate();
+            int rows = ps.executeUpdate();
 
             ps.close();
             Database.closeConnection(connection);
+            return rows > 0;
         } catch (SQLException e) {
             System.out.println("Unable to delete booking: " + e.getMessage());
         }
+        return false;
     }
 }

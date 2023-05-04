@@ -1,11 +1,10 @@
 package dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
-public interface DAO<T, PK_TYPE> {
+public interface DAO<T, ID> {
 
-    T get(PK_TYPE pk);
+    T get(ID id);
 
     List<T> getAll();
 
@@ -13,5 +12,5 @@ public interface DAO<T, PK_TYPE> {
 
     void update(T t);
 
-    void delete(T t);
+    boolean delete(ID id);
 }

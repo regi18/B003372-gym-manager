@@ -9,5 +9,5 @@ public interface MembershipDAO {
 
     void updateOfCustomer(String fiscalCode, Membership membership);
 
-    void deleteOfCustomer(String fiscalCode);
+    boolean deleteOfCustomer(String fiscalCode);
 }

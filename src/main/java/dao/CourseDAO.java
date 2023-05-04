@@ -14,5 +14,5 @@ public interface CourseDAO extends DAO<Course, Integer> {
 
     public void addBooking(String fiscalCode, Integer courseId);
 
-    public void deleteBooking(String fiscalCode, Integer courseId);
+    public boolean deleteBooking(String fiscalCode, Integer courseId);
 }

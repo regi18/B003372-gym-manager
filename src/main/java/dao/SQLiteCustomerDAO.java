@@ -105,21 +105,23 @@ public class SQLiteCustomerDAO implements CustomerDAO {
     }
 
     @Override
-    public void delete(Customer customer) {
+    public boolean delete(String fiscalCode) {
         try {
             Connection connection = Database.getConnection();
 
             PreparedStatement ps = connection.prepareStatement("DELETE FROM customers WHERE fiscal_code = ?");
-            ps.setString(1, customer.getFiscalCode());
-            ps.executeUpdate();
+            ps.setString(1, fiscalCode);
+            int rows = ps.executeUpdate();
 
             // Not needed because of the ON DELETE CASCADE constraint
             // membershipDAO.deleteOfCustomer(customer.getFiscalCode());
 
             ps.close();
             Database.closeConnection(connection);
+            return rows > 0;
         } catch (SQLException e) {
             System.out.println("Unable to delete customer: " + e.getMessage());
         }
+        return false;
     }
 }

@@ -103,21 +103,23 @@ public class SQLiteMembershipDAO implements MembershipDAO {
     }
 
     @Override
-    public void deleteOfCustomer(String fiscalCode) {
+    public boolean deleteOfCustomer(String fiscalCode) {
         try {
             Connection connection = Database.getConnection();
             PreparedStatement deleteMembership = connection.prepareStatement("DELETE FROM memberships WHERE customer = ?");
             deleteMembership.setString(1, fiscalCode);
-            deleteMembership.executeUpdate();
+            int rows = deleteMembership.executeUpdate();
             deleteMembership.close();
 
             // No need to delete extensions, they will be deleted automatically by the database (ON DELETE CASCADE)
             // deleteExtensionsOfCustomer(fiscalCode);
 
             Database.closeConnection(connection);
+            return rows > 0;
         } catch (SQLException e) {
             System.out.println("Unable to delete membership of customer: " + e.getMessage());
         }
+        return false;
     }
 
     private void insertExtensionsOfCustomer(String fiscalCode, Membership membership) {

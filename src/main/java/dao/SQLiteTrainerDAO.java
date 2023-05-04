@@ -95,16 +95,18 @@ public class SQLiteTrainerDAO implements TrainerDAO {
     }
 
     @Override
-    public void delete(Trainer trainer) {
+    public boolean delete(String fiscalCode) {
         try {
             Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement("DELETE FROM trainers WHERE fiscal_code = ?");
-            ps.setString(1, trainer.getFiscalCode());
-            ps.executeUpdate();
+            ps.setString(1, fiscalCode);
+            int rows = ps.executeUpdate();
             ps.close();
             Database.closeConnection(connection);
+            return rows > 0;
         } catch (SQLException e) {
             System.out.println("Unable to delete trainer: " + e.getMessage());
         }
+        return false;
     }
 }
