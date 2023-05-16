@@ -1,6 +1,9 @@
 package controllers;
 
 import dao.CustomerDAO;
+import dao.Database;
+import dao.SQLiteCustomerDAO;
+import dao.SQLiteMembershipDAO;
 import models.Customer;
 import models.membership.EmptyMembership;
 import models.membership.Membership;
@@ -8,16 +11,15 @@ import models.membership.WeekendMembershipDecorator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 
 class CustomerControllerTest {
@@ -26,14 +28,34 @@ class CustomerControllerTest {
 
 
     @BeforeEach
-    public void init() {
-        CustomerDAO mockedCustomerDAO = Mockito.mock(CustomerDAO.class);
+    public void init() throws SQLException {
+        // Set up database
+        Database.setDatabase("test.db");
+        resetDatabase();
+
+        // Create Customer DAO & controller
+        CustomerDAO customerDAO = new SQLiteCustomerDAO(new SQLiteMembershipDAO());
+        c = new CustomersController(customerDAO);
+
+        // Create test data (insert a customer)
         Membership membership = new WeekendMembershipDecorator(new EmptyMembership(LocalDate.from(LocalDateTime.now()), LocalDate.parse("9999-01-01")));
-        when(mockedCustomerDAO.getAll()).thenReturn(List.of(new Customer("RSSMRA", "Mario", "Rossi", membership)));
-        when(mockedCustomerDAO.get(any())).thenReturn(new Customer("RSSMRA", "Mario", "Rossi", membership));
-        c = new CustomersController(mockedCustomerDAO);
-        testCustomer = mockedCustomerDAO.get("RSSMRA");
+        testCustomer = new Customer("RSSMRA", "Mario", "Rossi", membership);
+        customerDAO.insert(testCustomer);
     }
+
+
+    private void resetDatabase() throws SQLException {
+        Connection connection = Database.getConnection();
+
+        // Delete data from all tables
+        List<String> tables = Arrays.asList("trainers", "courses", "customers", "memberships", "bookings", "membership_extensions");
+        for (String table : tables) connection.prepareStatement("DELETE FROM " + table).executeUpdate();
+
+        // Reset autoincrement counters
+        connection.prepareStatement("DELETE FROM sqlite_sequence").executeUpdate();
+        Database.closeConnection(connection);
+    }
+
 
     @Test
     public void when_AddingNewPerson_Expect_Success() {
