@@ -3,6 +3,7 @@ package dao;
 import models.membership.*;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.Map;
 
 import static java.util.Map.entry;
@@ -30,7 +31,7 @@ public class SQLiteMembershipDAO implements MembershipDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                membership = new EmptyMembership(rs.getDate("valid_from").toLocalDate(), rs.getDate("valid_until").toLocalDate());
+                membership = new EmptyMembership(LocalDate.parse(rs.getString("valid_from")), LocalDate.parse(rs.getString("valid_until")));
 
                 // Add extensions to membership
                 PreparedStatement ps2 = connection.prepareStatement("SELECT * FROM membership_extensions WHERE customer = ?");
@@ -67,8 +68,8 @@ public class SQLiteMembershipDAO implements MembershipDAO {
             Connection connection = Database.getConnection();
             PreparedStatement insertMembership = connection.prepareStatement("INSERT INTO memberships (customer, valid_from, valid_until) VALUES (?, ?, ?)");
             insertMembership.setString(1, fiscalCode);
-            insertMembership.setDate(2, Date.valueOf(membership.getValidFrom()));
-            insertMembership.setDate(3, Date.valueOf(membership.getValidUntil()));
+            insertMembership.setString(2, membership.getValidFrom().toString());
+            insertMembership.setString(3, membership.getValidUntil().toString());
             insertMembership.executeUpdate();
             insertMembership.close();
 
@@ -86,8 +87,8 @@ public class SQLiteMembershipDAO implements MembershipDAO {
         try {
             Connection connection = Database.getConnection();
             PreparedStatement updateMembership = connection.prepareStatement("UPDATE memberships SET valid_from = ?, valid_until = ? WHERE customer = ?");
-            updateMembership.setDate(1, Date.valueOf(membership.getValidFrom()));
-            updateMembership.setDate(2, Date.valueOf(membership.getValidUntil()));
+            updateMembership.setString(1, membership.getValidFrom().toString());
+            updateMembership.setString(2, membership.getValidUntil().toString());
             updateMembership.setString(3, fiscalCode);
             updateMembership.executeUpdate();
             updateMembership.close();

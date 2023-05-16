@@ -4,6 +4,7 @@ import models.Course;
 import models.Customer;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +29,11 @@ public class SQLiteCourseDAO implements CourseDAO {
 
             if (rs.next()) {
                 course = new Course(
+                        id,
                         rs.getString("name"),
                         rs.getInt("max_capacity"),
-                        rs.getTimestamp("start_date").toLocalDateTime(),
-                        rs.getTimestamp("end_date").toLocalDateTime(),
+                        LocalDateTime.parse(rs.getString("start_date")),
+                        LocalDateTime.parse(rs.getString("end_date")),
                         trainerDAO.get(rs.getString("trainer"))
                 );
             }
@@ -65,10 +67,11 @@ public class SQLiteCourseDAO implements CourseDAO {
 
             while (rs.next()) {
                 Course c = new Course(
+                        rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("max_capacity"),
-                        rs.getTimestamp("start_date").toLocalDateTime(),
-                        rs.getTimestamp("end_date").toLocalDateTime(),
+                        LocalDateTime.parse(rs.getString("start_date")),
+                        LocalDateTime.parse(rs.getString("end_date")),
                         trainerDAO.get(rs.getString("trainer"))
                 );
 
@@ -94,8 +97,8 @@ public class SQLiteCourseDAO implements CourseDAO {
             // id is auto-incremented, so it's not needed
             ps.setString(1, course.getName());
             ps.setInt(2, course.getMaxCapacity());
-            ps.setTimestamp(3, Timestamp.valueOf(course.getStartDate()));
-            ps.setTimestamp(4, Timestamp.valueOf(course.getEndDate()));
+            ps.setString(3, course.getStartDate().toString());
+            ps.setString(4, course.getEndDate().toString());
             ps.setString(5, course.getTrainer().getFiscalCode());
             ps.executeUpdate();
 
@@ -117,8 +120,8 @@ public class SQLiteCourseDAO implements CourseDAO {
             PreparedStatement ps = connection.prepareStatement("UPDATE courses SET name = ?, max_capacity = ?, start_date = ?, end_date = ?, trainer = ? WHERE id = ?");
             ps.setString(1, course.getName());
             ps.setInt(2, course.getMaxCapacity());
-            ps.setTimestamp(3, Timestamp.valueOf(course.getStartDate()));
-            ps.setTimestamp(4, Timestamp.valueOf(course.getEndDate()));
+            ps.setString(3, course.getStartDate().toString());
+            ps.setString(4, course.getEndDate().toString());
             ps.setString(5, course.getTrainer().getFiscalCode());
             ps.setInt(6, course.getId());
             ps.executeUpdate();
@@ -185,7 +188,7 @@ public class SQLiteCourseDAO implements CourseDAO {
             ResultSet rs = ps.executeQuery();
 
             List<Customer> customers = new ArrayList<>();
-            while (rs.next()) customers.add(customerDAO.get(rs.getString("fiscal_code")));
+            while (rs.next()) customers.add(customerDAO.get(rs.getString("customer")));
 
             rs.close();
             ps.close();
