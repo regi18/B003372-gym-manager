@@ -1,23 +1,24 @@
 package controllers;
 
-import dao.CourseDAO;
-import dao.TrainerDAO;
+import dao.*;
 import models.Course;
 import models.Customer;
 import models.Trainer;
 import models.membership.EmptyMembership;
 import models.membership.Membership;
+import models.membership.WeekdaysMembershipDecorator;
+import models.membership.WeekendMembershipDecorator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 
 class BookingsControllerTest {
@@ -26,32 +27,44 @@ class BookingsControllerTest {
     private final int testCourse1Id = 1;
     private final int testCourse2Id = 2;
     private Customer testCustomer;
-    private Membership mockedMembership;
 
     @BeforeEach
-    public void init() {
+    public void init() throws SQLException {
+        // Set up database
+        Database.setDatabase("test.db");
+        resetDatabase();
+
+        // Create DAOs
+        SQLiteCustomerDAO customerDAO = new SQLiteCustomerDAO(new SQLiteMembershipDAO());
+        TrainerDAO trainerDAO = new SQLiteTrainerDAO();
+        CourseDAO courseDAO = new SQLiteCourseDAO(trainerDAO, customerDAO);
+
+        // Create controllers
+        coursesController = new CoursesController(new TrainersController(trainerDAO), courseDAO);
+        bookingsController = new BookingsController(coursesController, courseDAO);
+
+        // Create customer, trainer, membership
+        Membership membership = new WeekendMembershipDecorator(new WeekdaysMembershipDecorator(new EmptyMembership(LocalDate.now().minusDays(1), LocalDate.now().plusDays(1))));
+        testCustomer = new Customer("A", "A", "A", membership);
         Trainer trainer = new Trainer("testTrainer", "testTrainer", "testTrainer", 50);
-        Course course1 = new Course(testCourse1Id, "test1", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), trainer);
-        Course course2 = new Course(testCourse2Id, "test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), trainer);
 
-        TrainerDAO mockedTrainerDAO = Mockito.mock(TrainerDAO.class);
-        when(mockedTrainerDAO.get("testTrainer")).thenReturn(trainer);
-        when(mockedTrainerDAO.get(any())).thenThrow(RuntimeException.class);
-        when(mockedTrainerDAO.getAll()).thenReturn(List.of(trainer));
+        // Insert trainer, customer and two courses into the database
+        trainerDAO.insert(trainer);
+        customerDAO.insert(testCustomer);
+        courseDAO.insert(new Course(testCourse1Id, "test1", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), trainer));
+        courseDAO.insert(new Course(testCourse2Id, "test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), trainer));
+    }
 
+    private void resetDatabase() throws SQLException {
+        Connection connection = Database.getConnection();
 
-        CourseDAO mockedCourseDAO = Mockito.mock(CourseDAO.class);
-        when(mockedCourseDAO.getAll()).thenReturn(Arrays.asList(course1, course2));
-        when(mockedCourseDAO.get(any())).thenReturn(course1);
+        // Delete data from all tables
+        List<String> tables = Arrays.asList("trainers", "courses", "customers", "memberships", "bookings", "membership_extensions");
+        for (String table : tables) connection.prepareStatement("DELETE FROM " + table).executeUpdate();
 
-        TrainersController trainersController = new TrainersController(mockedTrainerDAO);
-        coursesController = new CoursesController(trainersController, mockedCourseDAO);
-        bookingsController = new BookingsController(coursesController, mockedCourseDAO);
-
-        mockedMembership = Mockito.mock(EmptyMembership.class);
-        when(mockedMembership.isValidForInterval(any(), any())).thenReturn(true);
-        when(mockedMembership.isExpired()).thenReturn(false);
-        testCustomer = new Customer("A", "A", "A", mockedMembership);
+        // Reset autoincrement counters
+        connection.prepareStatement("DELETE FROM sqlite_sequence").executeUpdate();
+        Database.closeConnection(connection);
     }
 
     @Test
@@ -87,7 +100,6 @@ class BookingsControllerTest {
     public void When_GettingBookedCourseForCustomer_Expect_ToReturnTheCourses() {
         bookingsController.bookCourse(testCustomer, testCourse1Id);
         bookingsController.bookCourse(testCustomer, testCourse2Id);
-        bookingsController.bookCourse(new Customer("B", "B", "B", mockedMembership), testCourse1Id);
 
         List<Course> l = bookingsController.getBookingsForCustomer(testCustomer.getFiscalCode());
         Assertions.assertEquals(l, Arrays.asList(coursesController.getCourse(testCourse1Id), coursesController.getCourse(testCourse2Id)));
