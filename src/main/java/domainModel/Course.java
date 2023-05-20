@@ -1,22 +1,15 @@
 package domainModel;
 
-import domainModel.membership.Membership;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-
-import static java.util.Collections.unmodifiableList;
 
 
 public class Course {
-    private Integer id;
+    private final Integer id;
     private final String name;
     private final int maxCapacity;
     private final LocalDateTime startDate;
     private final LocalDateTime endDate;
-    private final ArrayList<Customer> attendees = new ArrayList<>();
     private final Trainer trainer;
 
     public Course(int id, String name, int maxCapacity, LocalDateTime startDate, LocalDateTime endDate, Trainer trainer) {
