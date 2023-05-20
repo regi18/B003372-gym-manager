@@ -53,7 +53,7 @@ public class SQLiteCourseDAO implements CourseDAO {
     }
 
     private void addBookingsToCourse(Course course) throws SQLException {
-        List<Customer> bookedCustomers = getCustomersOfCourse(course.getId());
+        List<Customer> bookedCustomers = getAttendees(course.getId());
         for (Customer customer : bookedCustomers) course.addAttendee(customer);
     }
 
@@ -180,7 +180,7 @@ public class SQLiteCourseDAO implements CourseDAO {
     }
 
     @Override
-    public List<Customer> getCustomersOfCourse(Integer courseId) {
+    public List<Customer> getAttendees(Integer courseId) {
         try {
             Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM bookings WHERE course = ?");
@@ -201,7 +201,7 @@ public class SQLiteCourseDAO implements CourseDAO {
     }
 
     @Override
-    public List<Course> getCoursesOfCustomer(String fiscalCode) {
+    public List<Course> getCoursesForCustomer(String fiscalCode) {
         try {
             Connection connection = Database.getConnection();
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM bookings WHERE customer = ?");

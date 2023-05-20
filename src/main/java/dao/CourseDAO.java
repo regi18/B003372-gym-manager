@@ -8,9 +8,9 @@ import java.util.List;
 public interface CourseDAO extends DAO<Course, Integer> {
     public int getNextID();
 
-    public List<Customer> getCustomersOfCourse(Integer courseId); // getAttendees
+    public List<Customer> getAttendees(Integer courseId);
 
-    public List<Course> getCoursesOfCustomer(String fiscalCode);
+    public List<Course> getCoursesForCustomer(String fiscalCode);
 
     public void addBooking(String fiscalCode, Integer courseId);
 

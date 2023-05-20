@@ -30,7 +30,7 @@ public class BookingsController {
         Customer customer = customersController.getPerson(customerFiscalCode);
         if (c == null) throw new RuntimeException("The given course id does not exist");
 
-        List<Customer> attendees = coursesDAO.getCustomersOfCourse(courseId);
+        List<Customer> attendees = coursesDAO.getAttendees(courseId);
 
         if (attendees.size() == c.getMaxCapacity())
             throw new RuntimeException("This course if full, can't book");
@@ -64,6 +64,6 @@ public class BookingsController {
      * @param customerFiscalCode The fiscal code of the customer
      */
     public List<Course> getBookingsForCustomer(String customerFiscalCode) {
-        return coursesDAO.getCoursesOfCustomer(customerFiscalCode);
+        return coursesDAO.getCoursesForCustomer(customerFiscalCode);
     }
 }
