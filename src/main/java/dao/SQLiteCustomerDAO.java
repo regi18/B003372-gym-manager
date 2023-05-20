@@ -1,6 +1,6 @@
 package dao;
 
-import models.Customer;
+import domainModel.Customer;
 
 import java.sql.*;
 import java.util.ArrayList;

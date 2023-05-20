@@ -1,13 +1,13 @@
-package controllers;
+package businessLogic;
 
 import dao.CustomerDAO;
 import dao.Database;
 import dao.SQLiteCustomerDAO;
 import dao.SQLiteMembershipDAO;
-import models.Customer;
-import models.membership.EmptyMembership;
-import models.membership.Membership;
-import models.membership.WeekendMembershipDecorator;
+import domainModel.Customer;
+import domainModel.membership.EmptyMembership;
+import domainModel.membership.Membership;
+import domainModel.membership.WeekendMembershipDecorator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

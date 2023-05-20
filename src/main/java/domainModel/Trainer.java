@@ -1,4 +1,4 @@
-package models;
+package domainModel;
 
 public class Trainer extends Person {
     private float salary;

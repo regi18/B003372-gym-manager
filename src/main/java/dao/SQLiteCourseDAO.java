@@ -1,7 +1,7 @@
 package dao;
 
-import models.Course;
-import models.Customer;
+import domainModel.Course;
+import domainModel.Customer;
 
 import java.sql.*;
 import java.time.LocalDateTime;

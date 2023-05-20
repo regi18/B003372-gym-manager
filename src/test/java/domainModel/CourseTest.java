@@ -1,9 +1,9 @@
-package models;
+package domainModel;
 
-import models.membership.EmptyMembership;
-import models.membership.WeekdaysMembershipDecorator;
-import models.membership.Membership;
-import models.membership.WeekendMembershipDecorator;
+import domainModel.membership.EmptyMembership;
+import domainModel.membership.WeekdaysMembershipDecorator;
+import domainModel.membership.Membership;
+import domainModel.membership.WeekendMembershipDecorator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

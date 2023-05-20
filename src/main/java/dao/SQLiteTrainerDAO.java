@@ -1,6 +1,6 @@
 package dao;
 
-import models.Trainer;
+import domainModel.Trainer;
 
 import java.sql.*;
 import java.util.ArrayList;

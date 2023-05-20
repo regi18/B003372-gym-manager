@@ -1,13 +1,13 @@
-package controllers;
+package businessLogic;
 
 import dao.*;
-import models.Course;
-import models.Customer;
-import models.Trainer;
-import models.membership.EmptyMembership;
-import models.membership.Membership;
-import models.membership.WeekdaysMembershipDecorator;
-import models.membership.WeekendMembershipDecorator;
+import domainModel.Course;
+import domainModel.Customer;
+import domainModel.Trainer;
+import domainModel.membership.EmptyMembership;
+import domainModel.membership.Membership;
+import domainModel.membership.WeekdaysMembershipDecorator;
+import domainModel.membership.WeekendMembershipDecorator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,5 +1,5 @@
-package models;
-import models.membership.Membership;
+package domainModel;
+import domainModel.membership.Membership;
 
 
 public class Customer extends Person {

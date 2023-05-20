@@ -1,8 +1,8 @@
-package controllers;
+package businessLogic;
 
 import dao.CourseDAO;
-import models.Course;
-import models.Trainer;
+import domainModel.Course;
+import domainModel.Trainer;
 
 import java.time.LocalDateTime;
 import java.util.List;

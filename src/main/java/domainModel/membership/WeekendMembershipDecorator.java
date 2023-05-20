@@ -1,4 +1,4 @@
-package models.membership;
+package domainModel.membership;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -6,14 +6,14 @@ import java.time.LocalDateTime;
 /**
  * Decorator that lets the membership be valid in weekdays
  */
-public class WeekdaysMembershipDecorator extends MembershipDecorator {
+public class WeekendMembershipDecorator extends MembershipDecorator {
     int uses;
 
-    public WeekdaysMembershipDecorator(Membership membership) {
+    public WeekendMembershipDecorator(Membership membership) {
         super(membership);
     }
 
-    public WeekdaysMembershipDecorator(Membership membership, int uses) {
+    public WeekendMembershipDecorator(Membership membership, int uses) {
         super(membership);
         this.uses = uses;
     }
@@ -21,19 +21,19 @@ public class WeekdaysMembershipDecorator extends MembershipDecorator {
     @Override
     public boolean isValidForInterval(LocalDateTime start, LocalDateTime end) {
         if (!this.isDateIntervalValid(start, end)) return false;
-        boolean isCurrTrue = (isOnWeekdays(start) && isOnWeekdays(end));
+        boolean isCurrTrue = (isOnWeekend(start) && isOnWeekend(end));
         if (isCurrTrue) uses++;
         return super.isValidForInterval(start, end) || isCurrTrue;
     }
 
     @Override
     public float getPrice() {
-        return super.getPrice() + 250;
+        return super.getPrice() + 50;
     }
 
     @Override
     public String getUsesDescription() {
-        return super.getUsesDescription() + "Weekdays uses: " + uses + ", ";
+        return super.getUsesDescription() + "Weekend uses: " + uses + ", ";
     }
 
     @Override
@@ -41,7 +41,7 @@ public class WeekdaysMembershipDecorator extends MembershipDecorator {
         return uses;
     }
 
-    private boolean isOnWeekdays(LocalDateTime date) {
-        return date.getDayOfWeek() != DayOfWeek.SATURDAY && date.getDayOfWeek() != DayOfWeek.SUNDAY;
+    private boolean isOnWeekend(LocalDateTime date) {
+        return date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
     }
 }

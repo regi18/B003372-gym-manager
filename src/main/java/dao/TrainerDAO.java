@@ -1,6 +1,6 @@
 package dao;
 
-import models.Trainer;
+import domainModel.Trainer;
 
 public interface TrainerDAO extends DAO<Trainer, String> {
 }

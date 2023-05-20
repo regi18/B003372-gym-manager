@@ -1,6 +1,6 @@
 package dao;
 
-import models.membership.Membership;
+import domainModel.membership.Membership;
 
 public interface MembershipDAO {
     Membership getOfCustomer(String fiscalCode);

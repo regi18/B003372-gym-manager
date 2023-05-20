@@ -1,6 +1,6 @@
 package dao;
 
-import models.Customer;
+import domainModel.Customer;
 
 public interface CustomerDAO extends DAO<Customer, String> {
 }

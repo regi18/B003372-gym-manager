@@ -1,7 +1,7 @@
-package controllers;
+package businessLogic;
 
 import dao.DAO;
-import models.Person;
+import domainModel.Person;
 
 import java.util.List;
 
@@ -29,9 +29,7 @@ public abstract class PeopleController<T extends Person> {
 
     /** Removes the person with the corresponding fiscalCode */
     public boolean removePerson(String fiscalCode) {
-        T toRemove = getPerson(fiscalCode);
-        if (toRemove == null) return false;
-        else return this.dao.delete(fiscalCode);
+        return this.dao.delete(fiscalCode);
     }
 
     /** Returns the person with the corresponding fiscalCode */

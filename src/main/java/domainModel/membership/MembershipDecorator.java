@@ -1,4 +1,4 @@
-package models.membership;
+package domainModel.membership;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

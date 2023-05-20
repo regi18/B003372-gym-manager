@@ -1,4 +1,4 @@
-package models.membership;
+package domainModel.membership;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package dao;
 
-import models.membership.*;
+import domainModel.membership.*;
 
 import java.sql.*;
 import java.time.LocalDate;

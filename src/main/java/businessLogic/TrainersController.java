@@ -1,7 +1,7 @@
-package controllers;
+package businessLogic;
 
 import dao.TrainerDAO;
-import models.Trainer;
+import domainModel.Trainer;
 
 
 public class TrainersController extends PeopleController<Trainer> {

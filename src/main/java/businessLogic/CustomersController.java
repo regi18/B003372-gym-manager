@@ -1,11 +1,11 @@
-package controllers;
+package businessLogic;
 
 import dao.CustomerDAO;
-import models.Customer;
-import models.membership.Membership;
-import models.membership.EmptyMembership;
-import models.membership.WeekdaysMembershipDecorator;
-import models.membership.WeekendMembershipDecorator;
+import domainModel.Customer;
+import domainModel.membership.Membership;
+import domainModel.membership.EmptyMembership;
+import domainModel.membership.WeekdaysMembershipDecorator;
+import domainModel.membership.WeekendMembershipDecorator;
 
 import java.time.LocalDate;
 

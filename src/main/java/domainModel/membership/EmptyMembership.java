@@ -1,4 +1,4 @@
-package models.membership;
+package domainModel.membership;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +25,8 @@ public class EmptyMembership implements Membership {
      * @throws IllegalArgumentException if the price is negative or the date range is invalid
      */
     public EmptyMembership(LocalDate validFrom, LocalDate validUntil) {
-        if (!validFrom.isBefore(validUntil) && !validFrom.equals(validUntil)) throw new IllegalArgumentException("Date range invalid: validFrom must be a date before or equal to validUntil");
+        if (!validFrom.isBefore(validUntil) && !validFrom.equals(validUntil))
+            throw new IllegalArgumentException("Date range invalid: validFrom must be a date before or equal to validUntil");
 
         this.price = 0;
         this.validFrom = validFrom;
