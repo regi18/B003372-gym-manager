@@ -41,20 +41,12 @@ public class SQLiteCourseDAO implements CourseDAO {
             rs.close();
             ps.close();
 
-            // Fetch bookings for course and add them to course
-            if (course != null) addBookingsToCourse(course);
-
             Database.closeConnection(connection);
             return course;
         } catch (SQLException e) {
             System.out.println("Unable to get course: " + e.getMessage());
             return null;
         }
-    }
-
-    private void addBookingsToCourse(Course course) throws SQLException {
-        List<Customer> bookedCustomers = getAttendees(course.getId());
-        for (Customer customer : bookedCustomers) course.addAttendee(customer);
     }
 
     @Override
@@ -75,7 +67,6 @@ public class SQLiteCourseDAO implements CourseDAO {
                         trainerDAO.get(rs.getString("trainer"))
                 );
 
-                addBookingsToCourse(c);    // Fetch bookings for course and add them to course
                 courses.add(c);
             }
 
@@ -102,10 +93,6 @@ public class SQLiteCourseDAO implements CourseDAO {
             ps.setString(5, course.getTrainer().getFiscalCode());
             ps.executeUpdate();
 
-            // Add bookings for course in the bookings table
-            for (Customer customer : course.getAttendees())
-                addBooking(customer.getFiscalCode(), course.getId());
-
             ps.close();
             Database.closeConnection(connection);
         } catch (SQLException e) {
@@ -126,10 +113,6 @@ public class SQLiteCourseDAO implements CourseDAO {
             ps.setInt(6, course.getId());
             ps.executeUpdate();
 
-            // Update bookings for course in the bookings table
-            for (Customer customer : course.getAttendees())
-                addBooking(customer.getFiscalCode(), course.getId());
-
             ps.close();
             Database.closeConnection(connection);
         } catch (SQLException e) {
@@ -147,10 +130,6 @@ public class SQLiteCourseDAO implements CourseDAO {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM courses WHERE id = ?");
             ps.setInt(1, id);
             int rows = ps.executeUpdate();
-
-            // Delete bookings for course in the bookings table
-            for (Customer customer : course.getAttendees())
-                deleteBooking(customer.getFiscalCode(), id);
 
             ps.close();
             Database.closeConnection(connection);
