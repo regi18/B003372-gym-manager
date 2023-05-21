@@ -2,6 +2,7 @@ package domainModel.membership;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 /**
  * Concrete class representing a membership that can never access the gym.
@@ -59,8 +60,8 @@ public class EmptyMembership implements Membership {
     }
 
     @Override
-    public int getUses() {
-        return 0;
+    public HashMap<String, Integer> getUses() {
+        return new HashMap<>();
     }
 
     @Override

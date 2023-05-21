@@ -20,11 +20,12 @@ public abstract class PeopleController<T extends Person> {
      *
      * @param newPerson The new person
      */
-    protected void addPerson(T newPerson) throws IllegalArgumentException {
-        if (getPerson(newPerson.getFiscalCode()) != null)
-            throw new IllegalArgumentException("Someone with this fiscalCode exists already");
-
+    protected String addPerson(T newPerson) throws IllegalArgumentException {
+//        if (getPerson(newPerson.getFiscalCode()) != null)
+//            throw new IllegalArgumentException("Someone with this fiscalCode exists already");
+        // TODO throw IllegalArgumentException if person already exists, use sql exception instead of manual check like above
         this.dao.insert(newPerson);
+        return newPerson.getFiscalCode();
     }
 
     /** Removes the person with the corresponding fiscalCode */

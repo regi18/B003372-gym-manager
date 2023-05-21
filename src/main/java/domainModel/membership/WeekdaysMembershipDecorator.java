@@ -2,6 +2,7 @@ package domainModel.membership;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 /**
  * Decorator that lets the membership be valid in weekdays
@@ -37,8 +38,9 @@ public class WeekdaysMembershipDecorator extends MembershipDecorator {
     }
 
     @Override
-    public int getUses() {
-        return uses;
+    public HashMap<String, Integer> getUses() {
+        this.membership.getUses().put("weekdays", uses);
+        return this.membership.getUses();
     }
 
     private boolean isOnWeekdays(LocalDateTime date) {

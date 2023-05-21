@@ -2,6 +2,7 @@ package domainModel.membership;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 /**
  * Abstract membership decorator
@@ -51,7 +52,7 @@ public abstract class MembershipDecorator implements Membership {
     }
 
     @Override
-    public int getUses() {
+    public HashMap<String, Integer> getUses() {
         return this.membership.getUses();
     }
 

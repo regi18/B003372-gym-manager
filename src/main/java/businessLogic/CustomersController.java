@@ -23,7 +23,7 @@ public class CustomersController extends PeopleController<Customer> {
      * @param membershipDecorators The decorators to apply to the membership (e.g. "weekend", "weekdays", ...)
      * @param membershipEndDate    The membership end date
      */
-    public void addPerson(String fiscalCode, String name, String surname, String[] membershipDecorators, LocalDate membershipEndDate) {
+    public String addPerson(String fiscalCode, String name, String surname, String[] membershipDecorators, LocalDate membershipEndDate) {
         Membership m = new EmptyMembership(LocalDate.now(), membershipEndDate);
 
         for (String s : membershipDecorators) {
@@ -32,6 +32,6 @@ public class CustomersController extends PeopleController<Customer> {
         }
 
         Customer c = new Customer(fiscalCode, name, surname, m);
-        super.addPerson(c);
+        return super.addPerson(c);
     }
 }

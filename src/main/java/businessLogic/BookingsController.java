@@ -29,6 +29,7 @@ public class BookingsController {
         Course c = coursesController.getCourse(courseId);
         Customer customer = customersController.getPerson(customerFiscalCode);
         if (c == null) throw new RuntimeException("The given course id does not exist");
+        if (customer == null) throw new RuntimeException("The given customer does not exist");
 
         List<Customer> attendees = coursesDAO.getAttendees(courseId);
 
@@ -53,8 +54,6 @@ public class BookingsController {
      * @return true if successful, false otherwise (i.e. customer not found in course or courseId not exiting)
      */
     public boolean deleteCourseBooking(String customerFiscalCode, int courseId) {
-        Course c = coursesController.getCourse(courseId);
-        if (c == null) return false;
         return coursesDAO.deleteBooking(customerFiscalCode, courseId);
     }
 

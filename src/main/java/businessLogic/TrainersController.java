@@ -10,8 +10,8 @@ public class TrainersController extends PeopleController<Trainer> {
         super(trainerDAO);
     }
 
-    public void addPerson(String fiscalCode, String name, String surname, float salary) throws IllegalArgumentException {
+    public String addPerson(String fiscalCode, String name, String surname, float salary) throws IllegalArgumentException {
         Trainer t = new Trainer(fiscalCode, name, surname, salary);
-        super.addPerson(t);
+        return super.addPerson(t);
     }
 }

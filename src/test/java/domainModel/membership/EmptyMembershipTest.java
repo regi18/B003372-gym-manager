@@ -6,19 +6,19 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
-class FullMembershipTest {
+class EmptyMembershipTest {
     @Test
-    public void when_creatingNewMembership_With_validInterval_Expect_IllegalArgumentException() {
+    public void when_creatingNewMembership_With_invalidInterval_Expect_IllegalArgumentException() {
         Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> new EmptyMembership( LocalDate.now(), LocalDate.now().minusDays(10)),
+                () -> new EmptyMembership(LocalDate.now(), LocalDate.now().minusDays(10)),
                 "Expected constructor to throw, but it didn't"
         );
     }
 
     @Test
-    public void when_creatingNewMembership_With_invalidInterval_Expect_Success() {
-        new EmptyMembership( LocalDate.now(), LocalDate.now());
+    public void when_creatingNewMembership_With_validInterval_Expect_Success() {
+        new EmptyMembership(LocalDate.now(), LocalDate.now());
         new EmptyMembership(LocalDate.now(), LocalDate.now().plusDays(1));
     }
 

@@ -38,7 +38,7 @@ public class CoursesController {
             throw new IllegalArgumentException("Trainer not found");
 
         Course c = new Course(courseDAO.getNextID(), name, maxCapacity, startDate, endDate, trainer);
-        courseDAO.insert(c);
+        courseDAO.insert(c); // TODO if insert fails?? No way of knowing
         return c.getId();
     }
 

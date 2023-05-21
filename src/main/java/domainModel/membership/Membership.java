@@ -2,6 +2,7 @@ package domainModel.membership;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 /**
  * Gym membership interface.
@@ -38,7 +39,8 @@ public interface Membership {
     boolean isExpired();
 
     /**
-     * Check if the membership is valid in the current interval of time
+     * Check if the membership is valid in the current interval of time.
+     * If true, also increment the number of uses of the membership.
      *
      * @param start Start of the time interval
      * @param end   End of the time interval
@@ -59,5 +61,5 @@ public interface Membership {
      *
      * @return The number of uses
      */
-    int getUses();
+    HashMap<String, Integer> getUses();
 }
