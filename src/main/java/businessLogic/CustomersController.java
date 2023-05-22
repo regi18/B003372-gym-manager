@@ -22,8 +22,12 @@ public class CustomersController extends PeopleController<Customer> {
      * @param surname              The surname of the new customer
      * @param membershipDecorators The decorators to apply to the membership (e.g. "weekend", "weekdays", ...)
      * @param membershipEndDate    The membership end date
+     *
+     * @return The fiscal code of the newly created customer
+     *
+     * @throws Exception bubbles up exceptions of PeopleController::addPerson()
      */
-    public String addPerson(String fiscalCode, String name, String surname, String[] membershipDecorators, LocalDate membershipEndDate) {
+    public String addPerson(String fiscalCode, String name, String surname, String[] membershipDecorators, LocalDate membershipEndDate) throws Exception {
         Membership m = new EmptyMembership(LocalDate.now(), membershipEndDate);
 
         for (String s : membershipDecorators) {

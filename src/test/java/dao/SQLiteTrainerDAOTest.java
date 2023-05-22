@@ -37,13 +37,13 @@ public class SQLiteTrainerDAOTest {
     }
 
     @Test
-    public void When_GetAllTrainers_Expect_Success() {
+    public void When_GetAllTrainers_Expect_Success() throws SQLException {
         List<Trainer> trainers = trainerDAO.getAll();
         Assertions.assertEquals(2, trainers.size());
     }
 
     @Test
-    public void When_GetTrainerByFiscalCode_Expect_Success() {
+    public void When_GetTrainerByFiscalCode_Expect_Success() throws SQLException {
         Trainer trainer = trainerDAO.get("test1");
         Assertions.assertEquals("test1", trainer.getFiscalCode());
         Assertions.assertEquals("name1", trainer.getName());
@@ -52,22 +52,22 @@ public class SQLiteTrainerDAOTest {
     }
 
     @Test
-    public void When_GetTrainerByFiscalCode_Expect_Null() {
+    public void When_GetTrainerByFiscalCode_Expect_Null() throws SQLException {
         Trainer trainer = trainerDAO.get("test3");
         Assertions.assertNull(trainer);
     }
 
     @Test
-    public void When_AddTrainer_Expect_Success() {
+    public void When_AddTrainer_Expect_Success() throws SQLException {
         Trainer trainer = new Trainer("test3", "name3", "surname3", 300);
-        trainerDAO.insert(trainer);
+        Assertions.assertDoesNotThrow(() -> trainerDAO.insert(trainer));
         Assertions.assertEquals(3, trainerDAO.getAll().size());
     }
 
     @Test
-    public void When_UpdateTrainer_Expect_Success() {
+    public void When_UpdateTrainer_Expect_Success() throws SQLException {
         Trainer trainer = new Trainer("test1", "name1_edited", "surname1_edited", 1000);
-        trainerDAO.update(trainer);
+        Assertions.assertDoesNotThrow(() -> trainerDAO.update(trainer));
         Assertions.assertEquals(2, trainerDAO.getAll().size());
         Assertions.assertEquals("name1_edited", trainerDAO.get("test1").getName());
         Assertions.assertEquals("surname1_edited", trainerDAO.get("test1").getSurname());
@@ -75,13 +75,13 @@ public class SQLiteTrainerDAOTest {
     }
 
     @Test
-    public void When_DeleteTrainer_Expect_Success() {
+    public void When_DeleteTrainer_Expect_Success() throws SQLException {
         Assertions.assertTrue(trainerDAO.delete("test1"));
         Assertions.assertEquals(1, trainerDAO.getAll().size());
     }
 
     @Test
-    public void When_DeleteTrainer_Expect_Failure() {
+    public void When_DeleteTrainer_Expect_Failure() throws SQLException {
         Assertions.assertFalse(trainerDAO.delete("test3"));
         Assertions.assertEquals(2, trainerDAO.getAll().size());
     }

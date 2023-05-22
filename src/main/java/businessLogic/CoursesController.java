@@ -30,15 +30,15 @@ public class CoursesController {
      *
      * @return The id of the newly created course
      *
-     * @throws IllegalArgumentException If the trainer is not found
+     * @throws Exception If the trainer is not found, bubbles up exceptions of CourseDAO::insert()
      */
-    public int addCourse(String name, int maxCapacity, LocalDateTime startDate, LocalDateTime endDate, String trainerFiscalCode) throws IllegalArgumentException {
+    public int addCourse(String name, int maxCapacity, LocalDateTime startDate, LocalDateTime endDate, String trainerFiscalCode) throws Exception {
         Trainer trainer = trainersController.getPerson(trainerFiscalCode);
         if (trainer == null)
             throw new IllegalArgumentException("Trainer not found");
 
         Course c = new Course(courseDAO.getNextID(), name, maxCapacity, startDate, endDate, trainer);
-        courseDAO.insert(c); // TODO if insert fails?? No way of knowing
+        courseDAO.insert(c);
         return c.getId();
     }
 
@@ -48,8 +48,10 @@ public class CoursesController {
      * @param id The id of the course to delete
      *
      * @return true if successful, false otherwise
+     *
+     * @throws Exception bubbles up exceptions of CourseDAO::delete()
      */
-    public boolean removeCourse(int id) {
+    public boolean removeCourse(int id) throws Exception {
         return courseDAO.delete(id);
     }
 
@@ -59,8 +61,10 @@ public class CoursesController {
      * @param id The course id to fetch
      *
      * @return The course
+     *
+     * @throws Exception bubbles up exceptions of CourseDAO::get()
      */
-    public Course getCourse(int id) {
+    public Course getCourse(int id) throws Exception {
         return courseDAO.get(id);
     }
 
@@ -68,8 +72,10 @@ public class CoursesController {
      * Returns a read-only list of courses
      *
      * @return The list of courses
+     *
+     * @throws Exception bubbles up exceptions of CourseDAO::getAll()
      */
-    public List<Course> getAll() {
+    public List<Course> getAll() throws Exception {
         return unmodifiableList(this.courseDAO.getAll());
     }
 }

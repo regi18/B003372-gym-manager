@@ -66,9 +66,9 @@ class CustomerControllerTest {
 
 
     @Test
-    public void when_AddingNewPerson_Expect_Success() {
+    public void when_AddingNewPerson_Expect_Success() throws Exception {
         String[] tmp = {"weekend"};
-        c.addPerson("LGIVRD", "Luigi", "Verdi", tmp, LocalDate.parse("9999-01-01"));
+        Assertions.assertDoesNotThrow(() -> c.addPerson("LGIVRD", "Luigi", "Verdi", tmp, LocalDate.parse("9999-01-01")));
         testCustomer = c.getPerson("LGIVRD");
         Assertions.assertEquals("LGIVRD", testCustomer.getFiscalCode());
     }
@@ -84,27 +84,27 @@ class CustomerControllerTest {
     }
 
     @Test
-    public void when_gettingExistingPerson_Expect_toReturnThatPerson() {
+    public void when_gettingExistingPerson_Expect_toReturnThatPerson() throws Exception {
         Assertions.assertEquals(testCustomer, c.getPerson(testCustomer.getFiscalCode()));
     }
 
     @Test
-    public void when_gettingNonExistingPerson_Expect_toReturnNull() {
+    public void when_gettingNonExistingPerson_Expect_toReturnNull() throws Exception {
         Assertions.assertNull(c.getPerson(testCustomer.getFiscalCode() + 'Z'));
     }
 
     @Test
-    public void when_removingExistingPerson_Expect_toReturnTrue() {
+    public void when_removingExistingPerson_Expect_toReturnTrue() throws Exception {
         Assertions.assertTrue(c.removePerson(testCustomer.getFiscalCode()));
     }
 
     @Test
-    public void when_removingNonExistingPerson_Expect_toReturnFalse() {
+    public void when_removingNonExistingPerson_Expect_toReturnFalse() throws Exception {
         Assertions.assertFalse(c.removePerson(testCustomer.getFiscalCode() + 'Z'));
     }
 
     @Test
-    public void when_AddingNewPerson_WithSpecificMembership_Expect_ThatMembershipToWork() {
+    public void when_AddingNewPerson_WithSpecificMembership_Expect_ThatMembershipToWork() throws Exception {
         String[] tmp = {"weekend"};
         c.addPerson("PLUTO", "Pluto", "Giallo", tmp, LocalDate.parse("9999-01-01"));
         testCustomer = c.getPerson("PLUTO");

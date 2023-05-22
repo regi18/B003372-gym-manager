@@ -10,7 +10,7 @@ public class Course {
     private final int maxCapacity;
     private final LocalDateTime startDate;
     private final LocalDateTime endDate;
-    private final Trainer trainer;
+    private final Trainer trainer;  // TODO: This could be just the Trainer fiscal code, no need to store the whole object
 
     public Course(int id, String name, int maxCapacity, LocalDateTime startDate, LocalDateTime endDate, Trainer trainer) {
         this.name = name;

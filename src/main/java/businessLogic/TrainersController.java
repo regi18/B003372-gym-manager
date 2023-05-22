@@ -10,7 +10,13 @@ public class TrainersController extends PeopleController<Trainer> {
         super(trainerDAO);
     }
 
-    public String addPerson(String fiscalCode, String name, String surname, float salary) throws IllegalArgumentException {
+    /**
+     * Add a new trainer
+     *
+     * @return The fiscal code of the newly created trainer
+     * @throws Exception bubbles up exceptions of PeopleController::addPerson()
+     */
+    public String addPerson(String fiscalCode, String name, String surname, float salary) throws Exception {
         Trainer t = new Trainer(fiscalCode, name, surname, salary);
         return super.addPerson(t);
     }
