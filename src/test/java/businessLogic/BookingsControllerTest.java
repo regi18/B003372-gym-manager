@@ -2,17 +2,12 @@ package businessLogic;
 
 import dao.*;
 import domainModel.Course;
-import domainModel.Customer;
-import domainModel.Trainer;
-import domainModel.membership.EmptyMembership;
-import domainModel.membership.Membership;
-import domainModel.membership.WeekdaysMembershipDecorator;
-import domainModel.membership.WeekendMembershipDecorator;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -21,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 
 class BookingsControllerTest {
@@ -32,10 +26,15 @@ class BookingsControllerTest {
     private int testCourse2Id;
     private String testCustomerFiscalCode;
 
-    @BeforeEach
-    public void init() throws SQLException {
+    @BeforeAll
+    static void initDb() throws SQLException, IOException {
         // Set up database
         Database.setDatabase("test.db");
+        Database.initDatabase();
+    }
+
+    @BeforeEach
+    public void init() throws SQLException, IOException {
         resetDatabase();
 
         // Create DAOs
@@ -72,7 +71,6 @@ class BookingsControllerTest {
     public void When_BookingButCourseFull_Expected_RuntimeException() {
         int courseId = coursesController.addCourse("tmp", 0, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer");
 
-        bookingsController.bookCourse(testCustomerFiscalCode, courseId);
         Assertions.assertThrows(
                 RuntimeException.class,
                 () -> bookingsController.bookCourse(testCustomerFiscalCode, courseId),

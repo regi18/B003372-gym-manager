@@ -9,9 +9,12 @@ import domainModel.membership.EmptyMembership;
 import domainModel.membership.Membership;
 import domainModel.membership.WeekendMembershipDecorator;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.crypto.Data;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -26,11 +29,16 @@ class CustomerControllerTest {
     private CustomersController c;
     private Customer testCustomer;
 
-
-    @BeforeEach
-    public void init() throws SQLException {
+    @BeforeAll
+    static void initDb() throws SQLException, IOException {
         // Set up database
         Database.setDatabase("test.db");
+        Database.initDatabase();
+    }
+
+    @BeforeEach
+    public void init() throws SQLException, IOException {
+        Database.initDatabase();
         resetDatabase();
 
         // Create Customer DAO & controller

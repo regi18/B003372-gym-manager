@@ -1,5 +1,6 @@
 package dao;
 
+import java.io.*;
 import java.sql.*;
 
 /**
@@ -24,7 +25,6 @@ public class Database {
 
     /**
      * @param dbName Name of the database file
-     *
      * @return Connection to the SQLite database
      */
     public static Connection getConnection(String dbName) throws SQLException {
@@ -47,5 +47,29 @@ public class Database {
      */
     public static void closeConnection(Connection connection) throws SQLException {
         connection.close();
+    }
+
+    /**
+     * Initialize the database with the schema.sql file
+     *
+     * @return The number of rows affected
+     * @throws IOException If the schema.sql file is not found
+     * @throws SQLException SQL query error
+     */
+    public static int initDatabase() throws IOException, SQLException {
+        StringBuilder resultStringBuilder = new StringBuilder();
+        BufferedReader br = new BufferedReader(new FileReader("src/main/resources/database/schema.sql"));
+        String line;
+        while ((line = br.readLine()) != null) {
+            resultStringBuilder.append(line).append("\n");
+        }
+
+        Connection connection = getConnection();
+        Statement stmt = getConnection().createStatement();
+        int row = stmt.executeUpdate(resultStringBuilder.toString());
+
+        stmt.close();
+        closeConnection(connection);
+        return row;
     }
 }

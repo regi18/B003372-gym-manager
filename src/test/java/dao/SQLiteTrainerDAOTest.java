@@ -2,9 +2,12 @@ package dao;
 
 import domainModel.Trainer;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.crypto.Data;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -13,9 +16,15 @@ import java.util.List;
 public class SQLiteTrainerDAOTest {
     private SQLiteTrainerDAO trainerDAO;
 
-    @BeforeEach
-    public void init() throws SQLException {
+    @BeforeAll
+    static void initDb() throws SQLException, IOException {
+        // Set up database
         Database.setDatabase("test.db");
+        Database.initDatabase();
+    }
+
+    @BeforeEach
+    public void init() throws SQLException, IOException {
         Connection connection = Database.getConnection();
         trainerDAO = new SQLiteTrainerDAO();
 
