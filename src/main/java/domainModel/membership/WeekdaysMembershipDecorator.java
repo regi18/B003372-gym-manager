@@ -46,4 +46,9 @@ public class WeekdaysMembershipDecorator extends MembershipDecorator {
     private boolean isOnWeekdays(LocalDateTime date) {
         return date.getDayOfWeek() != DayOfWeek.SATURDAY && date.getDayOfWeek() != DayOfWeek.SUNDAY;
     }
+
+    @Override
+    public int getLocalUses() {
+        return uses;
+    }
 }

@@ -134,7 +134,7 @@ public class SQLiteMembershipDAO implements MembershipDAO {
                 // Insert extension
                 insertExtension.setString(1, fiscalCode);
                 insertExtension.setString(2, membershipTypeToString.get(membership.getClass()));
-                insertExtension.setInt(3, membershipDecorator.getUses());
+                insertExtension.setInt(3, membershipDecorator.getLocalUses());
                 insertExtension.executeUpdate();
                 membership = membershipDecorator.getMembership();
             }

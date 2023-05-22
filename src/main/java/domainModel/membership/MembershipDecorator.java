@@ -56,6 +56,10 @@ public abstract class MembershipDecorator implements Membership {
         return this.membership.getUses();
     }
 
+    public int getLocalUses() {
+        return 0;
+    }
+
     public final Membership getMembership() {
         return this.membership;
     }
