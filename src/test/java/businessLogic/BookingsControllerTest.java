@@ -8,11 +8,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.channels.AsynchronousServerSocketChannel;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -51,7 +55,7 @@ class BookingsControllerTest {
 
         // Insert trainer, customer and two courses into the database
         trainersController.addPerson("testTrainer", "testTrainer", "testTrainer", 50);
-        testCustomerFiscalCode = customersController.addPerson("A", "A", "A", new String[]{"weekdays", "weekend"}, LocalDate.now().plusDays(1));
+        testCustomerFiscalCode = customersController.addPerson("A", "A", "A", new String[]{"weekdays", "weekend"}, LocalDate.now().plusYears(9999));
         testCourse1Id = coursesController.addCourse("test1", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer");
         testCourse2Id = coursesController.addCourse("test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer");
     }
@@ -66,6 +70,16 @@ class BookingsControllerTest {
         // Reset autoincrement counters
         connection.prepareStatement("DELETE FROM sqlite_sequence").executeUpdate();
         Database.closeConnection(connection);
+    }
+
+    @Test
+    public void When_BookingButAlreadyBooked_Expected_Exception() throws Exception {
+        bookingsController.bookCourse(testCustomerFiscalCode, testCourse1Id);
+        Assertions.assertThrows(
+                RuntimeException.class,
+                () -> bookingsController.bookCourse(testCustomerFiscalCode, testCourse1Id),
+                "Expected bookCourse() to throw, but it didn't"
+        );
     }
 
     @Test
@@ -125,5 +139,32 @@ class BookingsControllerTest {
 
         List<Course> l = bookingsController.getBookingsForCustomer(testCustomerFiscalCode);
         Assertions.assertEquals(l, Arrays.asList(coursesController.getCourse(testCourse1Id), coursesController.getCourse(testCourse2Id)));
+    }
+
+    @Test
+    public void When_BookingForCustomer_Expect_UsesToIncreaseCorrectly() throws Exception {
+        // Test if the membership is valid on next thursday
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY); // Thursday of the current week
+        LocalDateTime weekDay = c.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        // Test if the membership is valid on next saturday
+        c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY); // Saturday of the current week
+        // I add 7 days to get the next saturday, because otherwise if today is sunday this test will fail (because the membership is valid from today)
+        c.add(Calendar.DATE, 7);
+        LocalDateTime weekendDay = c.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        int weekC = coursesController.addCourse("testWeek", 10, weekDay, weekDay.plusHours(1), "testTrainer");
+        int weekC2 = coursesController.addCourse("testWeek2", 10, weekDay, weekDay.plusHours(2), "testTrainer");
+        int weekendC = coursesController.addCourse("testWeekend", 10, weekendDay, weekendDay.plusHours(1), "testTrainer");
+
+        // Book the courses
+        bookingsController.bookCourse(testCustomerFiscalCode, weekC);
+        bookingsController.bookCourse(testCustomerFiscalCode, weekC2);
+        bookingsController.bookCourse(testCustomerFiscalCode, weekendC);
+
+        HashMap<String, Integer> uses = customersController.getPerson(testCustomerFiscalCode).getMembership().getUses();
+        Assertions.assertEquals(uses.get("weekdays"), 2);
+        Assertions.assertEquals(uses.get("weekend"), 1);
     }
 }
