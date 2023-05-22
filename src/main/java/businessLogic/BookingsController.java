@@ -3,6 +3,7 @@ package businessLogic;
 import dao.CourseDAO;
 import domainModel.Course;
 import domainModel.Customer;
+
 import java.util.List;
 
 
@@ -21,18 +22,17 @@ public class BookingsController {
      * Books a course for the given customer
      *
      * @param customerFiscalCode The fiscal code of the customer for whom to book the course for
-     * @param courseId The course id to book
+     * @param courseId           The course id to book
      *
-     * @throws RuntimeException when courseId doesn't exist and bubbles up exceptions of Course::addAttendee()
+     * @throws Exception when courseId doesn't exist and bubbles up exceptions of Customer::addBooking(), CourseDAO::getAttendees()
      */
-    public void bookCourse(String customerFiscalCode, int courseId) throws RuntimeException {
+    public void bookCourse(String customerFiscalCode, int courseId) throws Exception {
         Course c = coursesController.getCourse(courseId);
         Customer customer = customersController.getPerson(customerFiscalCode);
         if (c == null) throw new RuntimeException("The given course id does not exist");
         if (customer == null) throw new RuntimeException("The given customer does not exist");
 
         List<Customer> attendees = coursesDAO.getAttendees(courseId);
-
         if (attendees.size() == c.getMaxCapacity())
             throw new RuntimeException("This course if full, can't book");
         if (attendees.contains(customer))
@@ -49,11 +49,13 @@ public class BookingsController {
      * Deletes a booking for the given customer
      *
      * @param customerFiscalCode The fiscal code of the customer for whom to remove the booking
-     * @param courseId The course id to remove
+     * @param courseId           The course id to remove
      *
      * @return true if successful, false otherwise (i.e. customer not found in course or courseId not exiting)
+     *
+     * @throws Exception bubbles up exceptions of CourseDAO::deleteBooking()
      */
-    public boolean deleteCourseBooking(String customerFiscalCode, int courseId) {
+    public boolean deleteCourseBooking(String customerFiscalCode, int courseId) throws Exception {
         return coursesDAO.deleteBooking(customerFiscalCode, courseId);
     }
 
@@ -61,8 +63,12 @@ public class BookingsController {
      * Returns a list of the courses that the given user booked
      *
      * @param customerFiscalCode The fiscal code of the customer
+     *
+     * @return A list of courses that the given user booked
+     *
+     * @throws Exception bubbles up exceptions of CourseDAO::getCoursesForCustomer()
      */
-    public List<Course> getBookingsForCustomer(String customerFiscalCode) {
+    public List<Course> getBookingsForCustomer(String customerFiscalCode) throws Exception {
         return coursesDAO.getCoursesForCustomer(customerFiscalCode);
     }
 }

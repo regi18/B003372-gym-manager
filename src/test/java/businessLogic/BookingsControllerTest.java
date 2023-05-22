@@ -33,7 +33,7 @@ class BookingsControllerTest {
     private String testCustomerFiscalCode;
 
     @BeforeEach
-    public void init() throws SQLException {
+    public void init() throws Exception {
         // Set up database
         Database.setDatabase("test.db");
         resetDatabase();
@@ -51,7 +51,7 @@ class BookingsControllerTest {
 
         // Insert trainer, customer and two courses into the database
         trainersController.addPerson("testTrainer", "testTrainer", "testTrainer", 50);
-        testCustomerFiscalCode = customersController.addPerson("A", "A", "A", new String[] { "weekdays", "weekend" }, LocalDate.now().plusDays(1));
+        testCustomerFiscalCode = customersController.addPerson("A", "A", "A", new String[]{"weekdays", "weekend"}, LocalDate.now().plusDays(1));
         testCourse1Id = coursesController.addCourse("test1", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer");
         testCourse2Id = coursesController.addCourse("test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer");
     }
@@ -69,7 +69,7 @@ class BookingsControllerTest {
     }
 
     @Test
-    public void When_BookingButCourseFull_Expected_RuntimeException() {
+    public void When_BookingButCourseFull_Expected_RuntimeException() throws Exception {
         int courseId = coursesController.addCourse("tmp", 0, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer");
 
         bookingsController.bookCourse(testCustomerFiscalCode, courseId);
@@ -100,29 +100,29 @@ class BookingsControllerTest {
 
     @Test
     public void When_BookingExistingCourse_Expect_Success() {
-        bookingsController.bookCourse(testCustomerFiscalCode, testCourse1Id);
+        Assertions.assertDoesNotThrow(() -> bookingsController.bookCourse(testCustomerFiscalCode, testCourse1Id));
     }
 
     @Test
-    public void When_DeletingNonExistingCourseBooking_Expect_ToReturnFalse() {
+    public void When_DeletingNonExistingCourseBooking_Expect_ToReturnFalse() throws Exception {
         // Test for non-existing courseId
         Assertions.assertFalse(bookingsController.deleteCourseBooking(testCustomerFiscalCode, -1));
         // Test for existing courseId, but user has not booked that course
-        customersController.addPerson("B", "B", "B", new String[] { "weekdays", "weekend" }, LocalDate.now().plusDays(1));
+        customersController.addPerson("B", "B", "B", new String[]{"weekdays", "weekend"}, LocalDate.now().plusDays(1));
         Assertions.assertFalse(bookingsController.deleteCourseBooking("B", testCourse1Id));
     }
 
     @Test
-    public void When_DeletingExistingCourseBooking_Expect_ToReturnTrue() {
-        bookingsController.bookCourse(testCustomerFiscalCode, testCourse1Id);
-        bookingsController.bookCourse(testCustomerFiscalCode, testCourse2Id);
+    public void When_DeletingExistingCourseBooking_Expect_ToReturnTrue() throws Exception {
+        Assertions.assertDoesNotThrow(() -> bookingsController.bookCourse(testCustomerFiscalCode, testCourse1Id));
+        Assertions.assertDoesNotThrow(() -> bookingsController.bookCourse(testCustomerFiscalCode, testCourse2Id));
         Assertions.assertTrue(bookingsController.deleteCourseBooking(testCustomerFiscalCode, testCourse1Id));
     }
 
     @Test
-    public void When_GettingBookedCourseForCustomer_Expect_ToReturnTheCourses() {
-        bookingsController.bookCourse(testCustomerFiscalCode, testCourse1Id);
-        bookingsController.bookCourse(testCustomerFiscalCode, testCourse2Id);
+    public void When_GettingBookedCourseForCustomer_Expect_ToReturnTheCourses() throws Exception {
+        Assertions.assertDoesNotThrow(() -> bookingsController.bookCourse(testCustomerFiscalCode, testCourse1Id));
+        Assertions.assertDoesNotThrow(() -> bookingsController.bookCourse(testCustomerFiscalCode, testCourse2Id));
 
         List<Course> l = bookingsController.getBookingsForCustomer(testCustomerFiscalCode);
         Assertions.assertEquals(l, Arrays.asList(coursesController.getCourse(testCourse1Id), coursesController.getCourse(testCourse2Id)));
