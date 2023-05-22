@@ -57,7 +57,7 @@ class BookingsControllerTest {
         trainersController.addPerson("testTrainer", "testTrainer", "testTrainer", 50);
         testCustomerFiscalCode = customersController.addPerson("A", "A", "A", new String[]{"weekdays", "weekend"}, LocalDate.now().plusYears(9999));
         testCourse1Id = coursesController.addCourse("test1", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer");
-        testCourse2Id = coursesController.addCourse("test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer");
+        testCourse2Id = coursesController.addCourse("test2", 10, LocalDateTime.now().plusHours(2), LocalDateTime.now().plusHours(4), "testTrainer");
     }
 
     private void resetDatabase() throws SQLException {
@@ -78,6 +78,17 @@ class BookingsControllerTest {
         Assertions.assertThrows(
                 RuntimeException.class,
                 () -> bookingsController.bookCourse(testCustomerFiscalCode, testCourse1Id),
+                "Expected bookCourse() to throw, but it didn't"
+        );
+    }
+
+    @Test
+    public void When_BookingButAlreadyBookedInSameTime_Expected_Exception() throws Exception {
+        int id = coursesController.addCourse("test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer");
+        bookingsController.bookCourse(testCustomerFiscalCode, testCourse1Id);
+        Assertions.assertThrows(
+                RuntimeException.class,
+                () -> bookingsController.bookCourse(testCustomerFiscalCode, id),
                 "Expected bookCourse() to throw, but it didn't"
         );
     }
@@ -155,7 +166,7 @@ class BookingsControllerTest {
         LocalDateTime weekendDay = c.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
         int weekC = coursesController.addCourse("testWeek", 10, weekDay, weekDay.plusHours(1), "testTrainer");
-        int weekC2 = coursesController.addCourse("testWeek2", 10, weekDay, weekDay.plusHours(2), "testTrainer");
+        int weekC2 = coursesController.addCourse("testWeek2", 10, weekDay.plusHours(1), weekDay.plusHours(2), "testTrainer");
         int weekendC = coursesController.addCourse("testWeekend", 10, weekendDay, weekendDay.plusHours(1), "testTrainer");
 
         // Book the courses

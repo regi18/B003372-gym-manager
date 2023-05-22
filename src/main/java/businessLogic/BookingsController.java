@@ -7,6 +7,8 @@ import domainModel.Course;
 import domainModel.Customer;
 import domainModel.membership.Membership;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -42,6 +44,14 @@ public class BookingsController {
             throw new RuntimeException("This course if full, can't book");
         if (attendees.contains(customer))
             throw new RuntimeException("The given customer is already booked for this course");
+
+        getBookingsForCustomer(customerFiscalCode).forEach(course -> {
+            LocalDateTime c1 = course.getStartDate().truncatedTo(ChronoUnit.HOURS);
+            LocalDateTime c2 = c.getStartDate().truncatedTo(ChronoUnit.HOURS);
+            if (c1.equals(c2))
+                throw new RuntimeException("The given customer is already booked for a course at the same time");
+        });
+
         if (customer.getMembership().isExpired())
             throw new RuntimeException("The membership of the given user is expired");
         if (!customer.getMembership().isValidForInterval(c.getStartDate(), c.getEndDate()))
