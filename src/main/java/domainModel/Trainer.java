@@ -15,4 +15,14 @@ public class Trainer extends Person {
     public void setSalary(float salary) {
         this.salary = salary;
     }
+
+    @Override
+    public String toString() {
+        return "Trainer{" +
+                "fiscalCode='" + getFiscalCode() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", surname='" + getSurname() + '\'' +
+                ", salary=" + salary +
+                '}';
+    }
 }

@@ -17,4 +17,14 @@ public class Customer extends Person {
     public void setMembership(Membership membership) {
         this.membership = membership;
     }
+
+    @Override
+    public String toString() {
+        return "Trainer{" +
+                "fiscalCode='" + getFiscalCode() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", surname='" + getSurname() + '\'' +
+                ", membership=" + getMembership() +
+                '}';
+    }
 }

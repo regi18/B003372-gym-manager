@@ -1,8 +1,11 @@
 package businessLogic;
 
 import dao.CourseDAO;
+import dao.MembershipDAO;
+import dao.SQLiteMembershipDAO;
 import domainModel.Course;
 import domainModel.Customer;
+import domainModel.membership.Membership;
 
 import java.util.List;
 
@@ -11,11 +14,13 @@ public class BookingsController {
     private final CoursesController coursesController;
     private final CustomersController customersController;
     private final CourseDAO coursesDAO;
+    private final MembershipDAO membershipDAO;
 
-    public BookingsController(CoursesController coursesController, CustomersController customersController, CourseDAO bookingsDAO) {
+    public BookingsController(CoursesController coursesController, CustomersController customersController, CourseDAO bookingsDAO, MembershipDAO membershipDAO) {
         this.coursesController = coursesController;
         this.customersController = customersController;
         this.coursesDAO = bookingsDAO;
+        this.membershipDAO = membershipDAO;
     }
 
     /**
@@ -41,6 +46,9 @@ public class BookingsController {
             throw new RuntimeException("The membership of the given user is expired");
         if (!customer.getMembership().isValidForInterval(c.getStartDate(), c.getEndDate()))
             throw new RuntimeException("The membership of the given user is not valid for this course");
+
+        // Update membership (update uses field)
+        membershipDAO.updateOfCustomer(customer.getFiscalCode(), customer.getMembership());
 
         coursesDAO.addBooking(customer.getFiscalCode(), courseId);
     }

@@ -17,6 +17,8 @@ public class EmptyMembership implements Membership {
     /** Date in which the membership ends */
     private final LocalDate validUntil;
 
+    private final HashMap<String, Integer> uses = new HashMap<>();
+
     /**
      * Constructor of a full membership
      *
@@ -61,7 +63,7 @@ public class EmptyMembership implements Membership {
 
     @Override
     public HashMap<String, Integer> getUses() {
-        return new HashMap<>();
+        return uses;
     }
 
     @Override

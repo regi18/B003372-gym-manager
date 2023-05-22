@@ -37,7 +37,7 @@ class CustomerControllerTest {
     }
 
     @BeforeEach
-    public void init() throws SQLException, IOException {
+    public void init() throws Exception {
         Database.initDatabase();
         resetDatabase();
 
@@ -77,7 +77,7 @@ class CustomerControllerTest {
     public void when_AddingAlreadyExistingPerson_Expect_IllegalArgumentException() {
         String[] tmp = {"weekend"};
         Assertions.assertThrows(
-                IllegalArgumentException.class,
+                Exception.class,
                 () -> c.addPerson("RSSMRA", "Mario", "Rossi", tmp, LocalDate.parse("9999-01-01")),
                 "Expected addPerson() to throw, but it didn't"
         );

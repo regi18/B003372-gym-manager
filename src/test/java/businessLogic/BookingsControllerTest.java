@@ -34,18 +34,19 @@ class BookingsControllerTest {
     }
 
     @BeforeEach
-    public void init() throws SQLException, IOException {
+    public void init() throws Exception {
         resetDatabase();
 
         // Create DAOs
         SQLiteCustomerDAO customerDAO = new SQLiteCustomerDAO(new SQLiteMembershipDAO());
         TrainerDAO trainerDAO = new SQLiteTrainerDAO();
         CourseDAO courseDAO = new SQLiteCourseDAO(trainerDAO, customerDAO);
+        MembershipDAO membershipDAO = new SQLiteMembershipDAO();
 
         // Create controllers
         coursesController = new CoursesController(new TrainersController(trainerDAO), courseDAO);
         customersController = new CustomersController(customerDAO);
-        bookingsController = new BookingsController(coursesController, customersController, courseDAO);
+        bookingsController = new BookingsController(coursesController, customersController, courseDAO, membershipDAO);
         TrainersController trainersController = new TrainersController(trainerDAO);
 
         // Insert trainer, customer and two courses into the database
