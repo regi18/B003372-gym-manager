@@ -31,11 +31,21 @@ public class CoursesController {
      * @return The id of the newly created course
      *
      * @throws Exception If the trainer is not found, bubbles up exceptions of CourseDAO::insert()
+     * @throws IllegalArgumentException If the trainer is already occupied in the given time range
      */
     public int addCourse(String name, int maxCapacity, LocalDateTime startDate, LocalDateTime endDate, String trainerFiscalCode) throws Exception {
         Trainer trainer = trainersController.getPerson(trainerFiscalCode);
         if (trainer == null)
             throw new IllegalArgumentException("Trainer not found");
+
+        // Check if the given trainer is not already occupied for the given time range
+        for (Course c : this.courseDAO.getAll()) {
+            if (c.getTrainer().getFiscalCode().equals(trainerFiscalCode)) {
+                if ((c.getStartDate().isBefore(endDate) || c.getStartDate().equals(endDate))
+                        && (c.getEndDate().isAfter(startDate) || c.getEndDate().equals(startDate)))
+                    throw new IllegalArgumentException("The given trainer is already occupied in the given time range (in course #" + c.getId() + ")");
+            }
+        }
 
         Course c = new Course(courseDAO.getNextID(), name, maxCapacity, startDate, endDate, trainer);
         courseDAO.insert(c);

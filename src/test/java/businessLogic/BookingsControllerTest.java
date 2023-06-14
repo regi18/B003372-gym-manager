@@ -6,9 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
-import java.nio.channels.AsynchronousServerSocketChannel;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -18,8 +16,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
 
 
 class BookingsControllerTest {
@@ -55,6 +51,8 @@ class BookingsControllerTest {
 
         // Insert trainer, customer and two courses into the database
         trainersController.addPerson("testTrainer", "testTrainer", "testTrainer", 50);
+        trainersController.addPerson("testTrainer2", "testTrainer2", "testTrainer2", 50);
+
         testCustomerFiscalCode = customersController.addPerson("A", "A", "A", new String[]{"weekdays", "weekend"}, LocalDate.now().plusYears(9999));
         testCourse1Id = coursesController.addCourse("test1", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer");
         testCourse2Id = coursesController.addCourse("test2", 10, LocalDateTime.now().plusHours(2), LocalDateTime.now().plusHours(4), "testTrainer");
@@ -84,7 +82,7 @@ class BookingsControllerTest {
 
     @Test
     public void When_BookingButAlreadyBookedInSameTime_Expected_Exception() throws Exception {
-        int id = coursesController.addCourse("test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer");
+        int id = coursesController.addCourse("test2", 10, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer2");
         bookingsController.bookCourse(testCustomerFiscalCode, testCourse1Id);
         Assertions.assertThrows(
                 RuntimeException.class,
@@ -95,7 +93,7 @@ class BookingsControllerTest {
 
     @Test
     public void When_BookingButCourseFull_Expected_RuntimeException() throws Exception {
-        int courseId = coursesController.addCourse("tmp", 0, LocalDateTime.now(), LocalDateTime.now().plusHours(1), "testTrainer");
+        int courseId = coursesController.addCourse("tmp", 0, LocalDateTime.now().plusHours(9), LocalDateTime.now().plusHours(10), "testTrainer");
 
         Assertions.assertThrows(
                 RuntimeException.class,
@@ -166,7 +164,7 @@ class BookingsControllerTest {
         LocalDateTime weekendDay = c.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
         int weekC = coursesController.addCourse("testWeek", 10, weekDay, weekDay.plusHours(1), "testTrainer");
-        int weekC2 = coursesController.addCourse("testWeek2", 10, weekDay.plusHours(1), weekDay.plusHours(2), "testTrainer");
+        int weekC2 = coursesController.addCourse("testWeek2", 10, weekDay.plusHours(2), weekDay.plusHours(3), "testTrainer");
         int weekendC = coursesController.addCourse("testWeekend", 10, weekendDay, weekendDay.plusHours(1), "testTrainer");
 
         // Book the courses
